@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>滬蘇旅行助手</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 高德地圖API -->
+    <link rel="stylesheet" href="https://cache.amap.com/lbs/static/main1119.css"/>
+    <script src="https://webapi.amap.com/maps?v=2.0&key=您的高德地圖API鍵&plugin=AMap.Walking,AMap.Transfer"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        :root {
+            --primary-color: #6C63FF;
+            --secondary-color: #FF6584;
+            --accent-color: #36C9C6;
+            --bg-color: #F5F7FA;
+            --card-color: #FFFFFF;
+            --text-dark: #2D3436;
+            --text-light: #636E72;
+            --border-color: #E0E6ED;
+            --shadow: 0 4px 12px rgba(108, 99, 255, 0.08);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px 15px 80px;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* 頂部狀態欄 */
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            margin-bottom: 20px;
+            color: var(--text-dark);
+            font-size: 14px;
+        }
+
+        .status-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .time {
+            font-weight: 600;
+            margin-right: 10px;
+        }
+
+        /* 標題區域 */
+        .header {
+            margin-bottom: 25px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        /* 導航菜單 */
+        .nav-tabs {
+            display: flex;
+            justify-content: space-between;
+            background-color: var(--card-color);
+            border-radius: 15px;
+            padding: 8px;
+            margin-bottom: 25px;
+            box-shadow: var(--shadow);
+        }
+
+        .nav-item {
+            flex: 1;
+            text-align: center;
+            padding: 12px 5px;
+            border-radius: 12px;
+            font-size: 14px;
+            color: var(--text-light);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .nav-item.active {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+        }
+
+        .nav-item i {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 18px;
+        }
+
+        /* 卡片樣式 */
+        .card {
+            background-color: var(--card-color);
+            border-radius: 18px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .card-title h2 {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .card-title i {
+            color: var(--primary-color);
+            font-size: 20px;
+        }
+
+        /* 天氣卡片 */
+        .weather-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .weather-location {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .weather-date {
+            font-size: 14px;
+            color: var(--text-light);
+        }
+
+        .weather-details {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .weather-temp {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .weather-icon {
+            font-size: 40px;
+            color: var(--accent-color);
+        }
+
+        .weather-desc {
+            font-size: 14px;
+            color: var(--text-light);
+        }
+
+        /* 行程卡片 */
+        .timeline {
+            position: relative;
+            padding-left: 25px;
+            margin-top: 15px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 8px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-color: var(--primary-color);
+            opacity: 0.3;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed var(--border-color);
+        }
+
+        .timeline-item:last-child {
+            margin-bottom: 0;
+            border-bottom: none;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -25px;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+        }
+
+        .timeline-time {
+            font-weight: 600;
+            font-size: 16px;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .timeline-title {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .timeline-desc {
+            font-size: 14px;
+            color: var(--text-light);
+        }
+
+        /* 記帳功能 */
+        .expense-summary {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .expense-category {
+            text-align: center;
+        }
+
+        .expense-amount {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .expense-label {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        .payment-method {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .method-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px 15px;
+            border-radius: 10px;
+            background-color: var(--bg-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .method-item.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .method-icon {
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+
+        .add-expense-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .add-expense-btn:hover {
+            background-color: #5a52e0;
+        }
+
+        /* 購物清單 */
+        .shopping-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .shopping-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .item-checkbox {
+            width: 20px;
+            height: 20px;
+            margin-right: 15px;
+            accent-color: var(--primary-color);
+        }
+
+        .item-name {
+            font-size: 16px;
+        }
+
+        .item-price {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .add-item-form {
+            display: flex;
+            margin-top: 20px;
+        }
+
+        .add-item-input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px 0 0 10px;
+            font-size: 14px;
+        }
+
+        .add-item-btn {
+            padding: 12px 20px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 0 10px 10px 0;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        /* 地圖容器 */
+        #map-container {
+            height: 300px;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        /* 匯率轉換器 */
+        .converter {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .currency-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .currency-flag {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+        }
+
+        .currency-select {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+
+        .currency-input {
+            flex: 2;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 16px;
+            text-align: right;
+        }
+
+        .swap-btn {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px 0;
+            width: 100%;
+        }
+
+        /* 底部導航 */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: var(--card-color);
+            padding: 15px;
+            display: flex;
+            justify-content: space-around;
+            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.05);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .bottom-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text-light);
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .bottom-nav-item.active {
+            color: var(--primary-color);
+        }
+
+        .bottom-nav-item i {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        /* 響應式調整 */
+        @media (max-width: 480px) {
+            body {
+                padding: 15px 10px 80px;
+            }
+            
+            .card {
+                padding: 15px;
+            }
+            
+            .weather-temp {
+                font-size: 30px;
+            }
+            
+            #map-container {
+                height: 250px;
+            }
+        }
+
+        /* 隱藏/顯示內容區域 */
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- 頂部狀態欄 -->
+    <div class="status-bar">
+        <div class="status-left">
+            <div class="time">8:38</div>
+            <div class="signal">
+                <i class="fas fa-signal"></i>
+                <i class="fas fa-wifi"></i>
+            </div>
+        </div>
+        <div class="battery">
+            <i class="fas fa-battery-three-quarters"></i>
+        </div>
+    </div>
+
+    <!-- 標題區域 -->
+    <div class="header">
+        <h1>滬蘇旅行助手</h1>
+        <p>12月19日-12月24日 • 澳門 → 上海 → 蘇州</p>
+    </div>
+
+    <!-- 導航標籤 -->
+    <div class="nav-tabs">
+        <div class="nav-item active" data-target="weather">
+            <i class="fas fa-cloud-sun"></i>
+            <span>天氣</span>
+        </div>
+        <div class="nav-item" data-target="itinerary">
+            <i class="fas fa-route"></i>
+            <span>行程</span>
+        </div>
+        <div class="nav-item" data-target="expense">
+            <i class="fas fa-wallet"></i>
+            <span>記帳</span>
+        </div>
+        <div class="nav-item" data-target="shopping">
+            <i class="fas fa-shopping-cart"></i>
+            <span>購物</span>
+        </div>
+    </div>
+
+    <!-- 天氣卡片 -->
+    <div id="weather" class="content-section active">
+        <div class="card">
+            <div class="card-title">
+                <h2>行程天氣預報</h2>
+                <i class="fas fa-sun"></i>
+            </div>
+            <div class="weather-info">
+                <div>
+                    <div class="weather-location">澳門</div>
+                    <div class="weather-date">12月19日 出發</div>
+                </div>
+                <div class="weather-details">
+                    <div>
+                        <div class="weather-temp">21°C</div>
+                        <div class="weather-desc">晴時多雲</div>
+                    </div>
+                    <div class="weather-icon">
+                        <i class="fas fa-sun"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">
+                <h2>上海天氣預報</h2>
+                <i class="fas fa-cloud-rain"></i>
+            </div>
+            <div class="weather-info">
+                <div>
+                    <div class="weather-location">上海</div>
+                    <div class="weather-date">12月19-24日</div>
+                </div>
+                <div class="weather-details">
+                    <div>
+                        <div class="weather-temp">8°C</div>
+                        <div class="weather-desc">陰有雨</div>
+                    </div>
+                    <div class="weather-icon">
+                        <i class="fas fa-cloud-rain"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">
+                <h2>蘇州天氣預報</h2>
+                <i class="fas fa-cloud"></i>
+            </div>
+            <div class="weather-info">
+                <div>
+                    <div class="weather-location">蘇州</div>
+                    <div class="weather-date">12月20-21日</div>
+                </div>
+                <div class="weather-details">
+                    <div>
+                        <div class="weather-temp">7°C</div>
+                        <div class="weather-desc">多雲</div>
+                    </div>
+                    <div class="weather-icon">
+                        <i class="fas fa-cloud"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 行程卡片 -->
+    <div id="itinerary" class="content-section">
+        <div class="card">
+            <div class="card-title">
+                <h2>行程安排</h2>
+                <i class="fas fa-calendar-alt"></i>
+            </div>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-time">12月19日 • 上午</div>
+                    <div class="timeline-title">澳門 → 上海</div>
+                    <div class="timeline-desc">從澳門出發前往上海浦東機場</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-time">12月19日 • 凌晨</div>
+                    <div class="timeline-title">上海 → 蘇州</div>
+                    <div class="timeline-desc">從上海前往蘇州，入住酒店</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-time">12月20-21日</div>
+                    <div class="timeline-title">蘇州觀光</div>
+                    <div class="timeline-desc">蘇州園林、寒山寺、平江路歷史街區</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-time">12月22日 • 上午</div>
+                    <div class="timeline-title">蘇州 → 上海</div>
+                    <div class="timeline-desc">返回上海，入住上海市區酒店</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-time">12月24日 • 下午</div>
+                    <div class="timeline-title">上海 → 澳門</div>
+                    <div class="timeline-desc">上海虹橋機場返回澳門</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">
+                <h2>地圖導航</h2>
+                <i class="fas fa-map-marked-alt"></i>
+            </div>
+            <div id="map-container">
+                <!-- 地圖將在這裡載入 -->
+                <div style="display: flex; justify-content: center; align-items: center; height: 100%; background-color: #f0f0f0; border-radius: 15px;">
+                    <div style="text-align: center;">
+                        <i class="fas fa-map" style="font-size: 50px; color: #6C63FF; margin-bottom: 15px;"></i>
+                        <p>高德地圖將在這裡顯示</p>
+                        <p style="font-size: 12px; color: #888; margin-top: 10px;">請替換為您的高德地圖API鍵以顯示地圖</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 記帳卡片 -->
+    <div id="expense" class="content-section">
+        <div class="card">
+            <div class="card-title">
+                <h2>支出總覽</h2>
+                <i class="fas fa-chart-pie"></i>
+            </div>
+            <div class="expense-summary">
+                <div class="expense-category">
+                    <div class="expense-amount">¥1,250</div>
+                    <div class="expense-label">今日支出</div>
+                </div>
+                <div class="expense-category">
+                    <div class="expense-amount">¥5,430</div>
+                    <div class="expense-label">行程總計</div>
+                </div>
+                <div class="expense-category">
+                    <div class="expense-amount">MOP 6,210</div>
+                    <div class="expense-label">澳門幣總計</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">
+                <h2>支付方式</h2>
+                <i class="fas fa-credit-card"></i>
+            </div>
+            <div class="payment-method">
+                <div class="method-item active" data-method="cash">
+                    <div class="method-icon">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <div>現金</div>
+                </div>
+                <div class="method-item" data-method="credit">
+                    <div class="method-icon">
+                        <i class="fas fa-credit-card"></i>
+                    </div>
+                    <div>信用卡</div>
+                </div>
+                <div class="method-item" data-method="alipay">
+                    <div class="method-icon">
+                        <i class="fab fa-alipay"></i>
+                    </div>
+                    <div>支付寶</div>
+                </div>
+                <div class="method-item" data-method="wechat">
+                    <div class="method-icon">
+                        <i class="fab fa-weixin"></i>
+                    </div>
+                    <div>微信支付</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">
+                <h2>記一筆支出</h2>
+                <i class="fas fa-edit"></i>
+            </div>
+            <div class="expense-form">
+                <div style="margin-bottom: 15px;">
+                    <input type="text" id="expense-name" placeholder="項目名稱" style="width: 100%; padding: 12px; border: 1px solid #E0E6ED; border-radius: 10px; font-size: 14px;">
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <input type="number" id="expense-amount" placeholder="金額" style="width: 100%; padding: 12px; border: 1px solid #E0E6ED; border-radius: 10px; font-size: 14px;">
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <select id="expense-category" style="width: 100%; padding: 12px; border: 1px solid #E0E6ED; border-radius: 10px; font-size: 14px; background-color: white;">
+                        <option value="">選擇類別</option>
+                        <option value="food">餐飲</option>
+                        <option value="transport">交通</option>
+                        <option value="shopping">購物</option>
+                        <option value="accommodation">住宿</option>
+                        <option value="attraction">景點門票</option>
+                    </select>
+                </div>
+                <button class="add-expense-btn" id="add-expense">
+                    <i class="fas fa-plus"></i> 新增支出記錄
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 購物清單卡片 -->
+    <div id="shopping" class="content-section">
+        <div class="card">
+            <div class="card-title">
+                <h2>購物清單</h2>
+                <i class="fas fa-list-check"></i>
+            </div>
+            <div class="shopping-list">
+                <div class="shopping-item">
+                    <div class="item-info">
+                        <input type="checkbox" class="item-checkbox" id="item1">
+                        <label for="item1" class="item-name">CEZANNE 101號唇膏</label>
+                    </div>
+                    <div class="item-price">¥3,000</div>
+                </div>
+                <div class="shopping-item">
+                    <div class="item-info">
+                        <input type="checkbox" class="item-checkbox" id="item2">
+                        <label for="item2" class="item-name">蘇州絲綢圍巾</label>
+                    </div>
+                    <div class="item-price">¥450</div>
+                </div>
+                <div class="shopping-item">
+                    <div class="item-info">
+                        <input type="checkbox" class="item-checkbox" id="item3">
+                        <label for="item3" class="item-name">上海特色糕點禮盒</label>
+                    </div>
+                    <div class="item-price">¥280</div>
+                </div>
+                <div class="shopping-item">
+                    <div class="item-info">
+                        <input type="checkbox" class="item-checkbox" id="item4">
+                        <label for="item4" class="item-name">茶葉禮盒</label>
+                    </div>
+                    <div class="item-price">¥360</div>
+                </div>
+            </div>
+            <div class="add-item-form">
+                <input type="text" class="add-item-input" id="new-item-name" placeholder="新增購物項目">
+                <button class="add-item-btn" id="add-shopping-item">新增</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">
+                <h2>匯率轉換</h2>
+                <i class="fas fa-exchange-alt"></i>
+            </div>
+            <div class="converter">
+                <div class="currency-row">
+                    <div class="currency-flag">
+                        <i class="fas fa-yen-sign"></i>
+                    </div>
+                    <input type="number" class="currency-input" id="cny-input" value="1000" placeholder="人民幣金額">
+                    <select class="currency-select" id="cny-select">
+                        <option value="CNY">人民幣 (CNY)</option>
+                    </select>
+                </div>
+                <div class="currency-row">
+                    <div class="currency-flag">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <input type="number" class="currency-input" id="mop-input" value="1125.50" placeholder="澳門幣金額" readonly>
+                    <select class="currency-select" id="mop-select">
+                        <option value="MOP">澳門幣 (MOP)</option>
+                    </select>
+                </div>
+                <button class="swap-btn" id="swap-currency">
+                    <i class="fas fa-sync-alt"></i> 刷新匯率 (1 CNY = 1.1255 MOP)
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部導航 -->
+    <div class="bottom-nav">
+        <div class="bottom-nav-item active" data-target="weather">
+            <i class="fas fa-cloud-sun"></i>
+            <span>天氣</span>
+        </div>
+        <div class="bottom-nav-item" data-target="itinerary">
+            <i class="fas fa-route"></i>
+            <span>行程</span>
+        </div>
+        <div class="bottom-nav-item" data-target="expense">
+            <i class="fas fa-wallet"></i>
+            <span>記帳</span>
+        </div>
+        <div class="bottom-nav-item" data-target="shopping">
+            <i class="fas fa-shopping-cart"></i>
+            <span>購物</span>
+        </div>
+    </div>
+
+    <script>
+        // 切換內容區域
+        document.querySelectorAll('.nav-item, .bottom-nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const targetId = this.getAttribute('data-target');
+                
+                // 更新導航狀態
+                document.querySelectorAll('.nav-item, .bottom-nav-item').forEach(nav => {
+                    nav.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                // 顯示對應的內容區域
+                document.querySelectorAll('.content-section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                document.getElementById(targetId).classList.add('active');
+            });
+        });
+
+        // 支付方式選擇
+        document.querySelectorAll('.method-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.method-item').forEach(method => {
+                    method.classList.remove('active');
+                });
+                this.classList.add('active');
+            });
+        });
+
+        // 匯率轉換功能
+        const exchangeRate = 1.1255; // 1 CNY = 1.1255 MOP
+        
+        function convertCurrency() {
+            const cnyInput = document.getElementById('cny-input');
+            const mopInput = document.getElementById('mop-input');
+            
+            if (cnyInput.value) {
+                const cnyValue = parseFloat(cnyInput.value);
+                const mopValue = cnyValue * exchangeRate;
+                mopInput.value = mopValue.toFixed(2);
+            }
+        }
+        
+        document.getElementById('cny-input').addEventListener('input', convertCurrency);
+        
+        // 模擬刷新匯率
+        document.getElementById('swap-currency').addEventListener('click', function() {
+            // 這裡可以添加實際的API調用來獲取實時匯率
+            // 目前僅模擬刷新
+            convertCurrency();
+            this.innerHTML = `<i class="fas fa-sync-alt"></i> 匯率已更新 (1 CNY = ${exchangeRate.toFixed(4)} MOP)`;
+            
+            // 3秒後恢復原狀
+            setTimeout(() => {
+                this.innerHTML = `<i class="fas fa-sync-alt"></i> 刷新匯率 (1 CNY = ${exchangeRate.toFixed(4)} MOP)`;
+            }, 3000);
+        });
+
+        // 新增購物項目
+        document.getElementById('add-shopping-item').addEventListener('click', function() {
+            const itemNameInput = document.getElementById('new-item-name');
+            const itemName = itemNameInput.value.trim();
+            
+            if (itemName) {
+                const shoppingList = document.querySelector('.shopping-list');
+                const newItem = document.createElement('div');
+                newItem.className = 'shopping-item';
+                newItem.innerHTML = `
+                    <div class="item-info">
+                        <input type="checkbox" class="item-checkbox" id="new-item">
+                        <label for="new-item" class="item-name">${itemName}</label>
+                    </div>
+                    <div class="item-price">¥0</div>
+                `;
+                
+                shoppingList.appendChild(newItem);
+                itemNameInput.value = '';
+            }
+        });
+
+        // 新增支出記錄
+        document.getElementById('add-expense').addEventListener('click', function() {
+            const expenseName = document.getElementById('expense-name').value.trim();
+            const expenseAmount = document.getElementById('expense-amount').value.trim();
+            const expenseCategory = document.getElementById('expense-category').value;
+            
+            if (expenseName && expenseAmount && expenseCategory) {
+                alert(`已新增支出記錄：\n項目：${expenseName}\n金額：¥${expenseAmount}\n類別：${expenseCategory}`);
+                
+                // 清空表單
+                document.getElementById('expense-name').value = '';
+                document.getElementById('expense-amount').value = '';
+                document.getElementById('expense-category').value = '';
+            } else {
+                alert('請填寫所有欄位');
+            }
+        });
+
+        // 初始化高德地圖
+        function initMap() {
+            // 請替換您的高德地圖API鍵
+            // 如果沒有API鍵，則顯示預設訊息
+            console.log("請替換高德地圖API鍵以啟用地圖功能");
+            
+            // 實際使用時，請取消註釋以下代碼並替換API鍵
+            /*
+            const map = new AMap.Map('map-container', {
+                zoom: 11,
+                center: [120.585315, 31.298974] // 蘇州坐標
+            });
+            
+            // 添加標記點
+            const markers = [
+                {position: [121.473701, 31.230416], title: '上海'},
+                {position: [120.585315, 31.298974], title: '蘇州'}
+            ];
+            
+            markers.forEach(markerInfo => {
+                new AMap.Marker({
+                    position: markerInfo.position,
+                    title: markerInfo.title,
+                    map: map
+                });
+            });
+            */
+        }
+
+        // 頁面載入完成後初始化
+        window.onload = function() {
+            // 初始化地圖
+            initMap();
+            
+            // 初始化匯率轉換
+            convertCurrency();
+            
+            // 模擬當前時間
+            updateTime();
+            setInterval(updateTime, 60000);
+        };
+
+        function updateTime() {
+            const now = new Date();
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            document.querySelector('.time').textContent = `${hours}:${minutes}`;
+        }
+    </script>
+</body>
+</html>
