@@ -377,12 +377,12 @@ body {
             </div>
             <div class="bg-white border border-slate-100 p-3 rounded-xl">
               <div class="text-xs text-indigo-500 font-bold mb-1">住宿</div>
-              <div class="font-bold text-slate-800">蘇州古城區</div>
+              <div class="font-bold text-slate-800">蘇州拙政書苑民宿</div>
             </div>
           </div>
           
           <!-- 蘇州博物館卡片 -->
-          <div class="bg-slate-800 text-white rounded-xl p-4 relative overflow-hidden flex justify-between items-center">
+          <div class="bg-slate-800 text-white rounded-xl p-4 relative overflow-hidden flex justify-between items-center mb-4">
             <div class="absolute top-0 right-0 p-4 opacity-10 text-6xl pointer-events-none"><i class="fa-solid fa-building-columns"></i></div>
             
             <div class="relative z-10 flex-1 pr-4">
@@ -394,12 +394,24 @@ body {
             </div>
 
             <div class="relative z-10 bg-white p-1 rounded-lg shadow-lg shrink-0">
-               <!-- 
-                  已替換為您提供的 GitHub 圖片連結
-               -->
                <img src="https://raw.githubusercontent.com/kerryraquel/Travel-Image/refs/heads/main/IMG_8086.jpeg" 
                     alt="蘇州博物館預約碼" class="w-24 h-24 block object-cover rounded-md">
             </div>
+          </div>
+
+          <!-- 住宿卡片 -->
+          <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
+             <div class="flex gap-3 mb-3">
+                <img src="https://github.com/kerryraquel/Travel-Image/blob/main/hotel.jpg?raw=true" class="w-20 h-20 object-cover rounded-lg shrink-0 bg-slate-100">
+                <div>
+                  <h3 class="font-bold text-slate-800 text-lg leading-tight">蘇州拙政書苑民宿</h3>
+                  <p class="text-xs text-slate-500 mt-1"><i class="fa-solid fa-location-dot mr-1"></i>蘇州姑蘇區西北街136號</p>
+                  <p class="text-xs text-blue-600 mt-1 font-bold bg-blue-50 inline-block px-1.5 py-0.5 rounded">12月19日 - 12月22日 (3晚)</p>
+                </div>
+             </div>
+             <a href="https://www.amap.com/search?query=蘇州拙政書苑民宿" target="_blank" class="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-lg text-sm transition-colors">
+               <i class="fa-solid fa-map-location-dot mr-1"></i> 地圖導航
+             </a>
           </div>
 
         </div>
@@ -481,15 +493,17 @@ createApp({
      return`旅程已結束`;
    });
 
-   // --- 行程資料 (已加入交通資訊) ---
+   // --- 行程資料 ---
    const days=ref([
-     {day:'Day 1',display:'19',date:'12月19日',city:'上海',plans:[
+     {day:'Day 1',display:'19',date:'12月19日',city:'上海/蘇州',plans:[
        {time:'18:00',title:'出發至澳門機場',note:'由 AIA Tower 出發，檢查護照', transport:'<i class="fa-solid fa-taxi"></i> 的士/巴士前往機場'},
        {time:'19:55',title:'MU2056 起飛',note:'前往上海虹橋 (SHA)'},
-       {time:'23:15',title:'入住酒店',note:'抵達蘇州古城區酒店 Check-in', transport:'<i class="fa-solid fa-train"></i> 虹橋站高鐵 → 蘇州站'}
+       {time:'22:25',title:'抵達上海虹橋',note:'航班落地，前往行李轉盤'},
+       {time:'22:55',title:'取行李 & 打車',note:'預計30分鐘取回行李，直接打車前往蘇州', transport:'<i class="fa-solid fa-taxi"></i> 的士/網約車 (約1小時15分)'},
+       {time:'00:15',title:'抵達民宿',note:'(次日凌晨) 抵達蘇州拙政書苑民宿辦理入住', transport:'<i class="fa-solid fa-bed"></i> 休息'}
      ]},
      {day:'Day 2',display:'20',date:'12月20日',city:'蘇州',plans:[
-       {time:'11:00',title:'蘇州博物館',note:'預約11:00場；貝聿銘建築+鎮館之寶+忠王府', transport:'<i class="fa-solid fa-train-subway"></i> 4號線 北寺塔站 4號口 <i class="fa-solid fa-person-walking ml-2"></i> 步行 900m'},
+       {time:'11:00',title:'蘇州博物館',note:'預約11:00場；貝聿銘建築+鎮館之寶+忠王府', transport:'<i class="fa-solid fa-person-walking"></i> 酒店步行約 2 分鐘 (150米) 即達'},
        {time:'13:10',title:'拙政園',note:'蘇博出口步行3分；東→中→西路線，避折返', transport:'<i class="fa-solid fa-person-walking"></i> 蘇博旁步行 200m'},
        {time:'14:30',title:'啞巴生煎 (臨頓路店)',note:'就在拙政園附近，必點招牌生煎，小心爆汁！', isFood: true, transport:'<i class="fa-solid fa-person-walking"></i> 沿臨頓路步行 400m'},
        {time:'15:40',title:'平江路歷史街區',note:'逛水巷，體驗小橋流水人家', transport:'<i class="fa-solid fa-person-walking"></i> 步行 500m 可達北入口'},
@@ -503,14 +517,19 @@ createApp({
        {time:'14:10',title:'觀前街',note:'逛老字號、買伴手禮', transport:'<i class="fa-solid fa-train-subway"></i> 4號線 察院場站 2號口'},
        {time:'15:20',title:'滄浪亭',note:'小而精的古典園林，人少好拍', transport:'<i class="fa-solid fa-train-subway"></i> 4號線 三元坊站 2號口 <i class="fa-solid fa-person-walking ml-2"></i> 步行 200m'},
        {time:'16:40',title:'阿月煲 (十全街店)',note:'蘇幫菜老店，酥蹄煲必點！', isFood: true, transport:'<i class="fa-solid fa-person-walking"></i> 沿十全街步行 450m'},
-       {time:'18:00',title:'金雞湖輪渡日落',note:'月光碼頭；推薦班次看日落', transport:'<i class="fa-solid fa-train-subway"></i> 1號線 文化博覽中心站 2號口'},
-       {time:'19:00',title:'金雞湖夜景',note:'望湖閣碼頭下船，觀賞東方之門燈光', transport:'<i class="fa-solid fa-ship"></i> 乘船抵達'}
+       {time:'16:30',title:'金雞湖輪渡日落',note:'月光碼頭出發；12月日落約17:00，此班次最佳', transport:'<i class="fa-solid fa-ticket"></i> 需提前微信預約「蘇州水上巴士」'},
+       {time:'18:00',title:'金雞湖夜景',note:'望湖閣碼頭下船，觀賞東方之門燈光', transport:'<i class="fa-solid fa-ship"></i> 乘船抵達'}
      ]},
      {day:'Day 4',display:'22',date:'12月22日',city:'上海',plans:[
-       {time:'10:00',title:'高鐵前往上海',note:'蘇州站 -> 上海站', transport:'<i class="fa-solid fa-train"></i> 高鐵約 30 分鐘'},
-       {time:'12:00',title:'外灘散步',note:'萬國建築博覽群', transport:'<i class="fa-solid fa-train-subway"></i> 2/10號線 南京東路站 2號口 <i class="fa-solid fa-person-walking ml-2"></i> 步行 600m'},
-       {time:'14:00',title:'陸家嘴',note:'上海中心大廈觀景台', transport:'<i class="fa-solid fa-train-subway"></i> 2號線 陸家嘴站 6號口'},
-       {time:'18:00',title:'南京路步行街',note:'購物與晚餐', transport:'<i class="fa-solid fa-train-subway"></i> 1/2/8號線 人民廣場站'}
+       {time:'全日',title:'行程待定',note:'自由活動 / 探索上海市區', transport:''}
+     ]},
+     {day:'Day 5',display:'23',date:'12月23日',city:'上海',plans:[
+       {time:'全日',title:'行程待定',note:'自由活動 / 探索上海市區', transport:''}
+     ]},
+     {day:'Day 6',display:'24',date:'12月24日',city:'上海 -> 澳門',plans:[
+       {time:'13:00',title:'抵達虹橋機場 T1',note:'提早 3 小時到達，辦理登機及托運手續', transport:'<i class="fa-solid fa-suitcase"></i> 值機'},
+       {time:'16:05',title:'MU2055 起飛',note:'飛往澳門 (MFM)', transport:'<i class="fa-solid fa-plane"></i> 東方航空'},
+       {time:'18:50',title:'抵達澳門',note:'平安返家', transport:'<i class="fa-solid fa-house"></i>'}
      ]}
    ]);
    const selDay=ref(days.value[0]);
