@@ -90,7 +90,7 @@ body {
 }
 .day-scroll::-webkit-scrollbar { display: none; }
 .day-tab {
-  flex: 0 0 auto; min-width: 64px; height: 72px;
+  flex: 0 0 auto; min-width: 68px; height: 76px;
   background: rgba(255, 255, 255, 0.9); 
   border-radius: 1rem;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -196,11 +196,13 @@ body {
           <div class="text-sm font-bold text-slate-700">{{ countText }}</div>
         </div>
 
+        <!-- 日期選擇器 (Updated with Weekdays) -->
         <div class="day-scroll">
           <div v-for="d in days" :key="d.date" @click="selDay=d"
                :class="['day-tab', selDay.date===d.date?'active':'']">
-            <div class="text-[10px] opacity-80 uppercase font-bold">{{ d.day }}</div>
-            <div class="text-xl font-black leading-none mt-1">{{ d.display }}</div>
+            <div class="text-[10px] font-black tracking-wider opacity-70">{{ d.weekDay }}</div>
+            <div class="text-xl font-black leading-none my-0.5">{{ d.display }}</div>
+            <div class="text-[9px] opacity-80 uppercase">{{ d.day }}</div>
           </div>
         </div>
 
@@ -370,15 +372,35 @@ body {
       <section v-if="tab==='info'" key="info">
         <div class="glass-card">
           <h2 class="text-lg font-bold text-slate-800 mb-4 border-b pb-2">旅程概覽</h2>
-          <div class="grid grid-cols-2 gap-4 mb-4">
-            <div class="bg-white border border-slate-100 p-3 rounded-xl">
-              <div class="text-xs text-blue-500 font-bold mb-1">目的地</div>
-              <div class="font-bold text-slate-800">上海 · 蘇州</div>
+          
+          <!-- 蘇州卡片 (已確認) -->
+          <div class="bg-white border border-slate-100 p-4 rounded-xl mb-3 shadow-sm relative overflow-hidden">
+            <div class="absolute right-0 top-0 p-3 opacity-5 text-6xl pointer-events-none"><i class="fa-solid fa-water"></i></div>
+            <div class="relative z-10">
+              <div class="flex justify-between items-center mb-2">
+                <h3 class="font-bold text-lg text-slate-800">蘇州</h3>
+                <span class="text-[10px] font-bold bg-blue-50 text-blue-600 px-2 py-1 rounded-full">12/19 - 12/22</span>
+              </div>
+              <div class="text-sm text-slate-600 mb-1 flex items-center">
+                <i class="fa-solid fa-bed mr-2 text-slate-400"></i> 蘇州拙政書苑民宿
+              </div>
+              <div class="text-xs text-slate-400 pl-6">已確認</div>
             </div>
-            <div class="bg-white border border-slate-100 p-3 rounded-xl">
-              <div class="text-xs text-indigo-500 font-bold mb-1">住宿</div>
-              <div class="font-bold text-slate-800">蘇州拙政書苑民宿</div>
-            </div>
+          </div>
+
+          <!-- 上海卡片 (待確認) -->
+          <div class="bg-white border border-slate-100 p-4 rounded-xl mb-4 shadow-sm relative overflow-hidden">
+             <div class="absolute right-0 top-0 p-3 opacity-5 text-6xl pointer-events-none"><i class="fa-solid fa-city"></i></div>
+             <div class="relative z-10">
+               <div class="flex justify-between items-center mb-2">
+                 <h3 class="font-bold text-lg text-slate-800">上海</h3>
+                 <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-1 rounded-full">12/22 - 12/24</span>
+               </div>
+               <div class="text-sm text-slate-500 mb-1 flex items-center italic">
+                 <i class="fa-solid fa-circle-question mr-2 text-slate-300"></i> 住宿待確認
+               </div>
+               <div class="text-xs text-orange-400 pl-6 font-bold">待安排</div>
+             </div>
           </div>
           
           <!-- 蘇州博物館卡片 -->
@@ -399,14 +421,13 @@ body {
             </div>
           </div>
 
-          <!-- 住宿卡片 -->
+          <!-- 住宿導航按鈕 -->
           <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
              <div class="flex gap-3 mb-3">
                 <img src="https://github.com/kerryraquel/Travel-Image/blob/main/hotel.jpg?raw=true" class="w-20 h-20 object-cover rounded-lg shrink-0 bg-slate-100">
                 <div>
                   <h3 class="font-bold text-slate-800 text-lg leading-tight">蘇州拙政書苑民宿</h3>
                   <p class="text-xs text-slate-500 mt-1"><i class="fa-solid fa-location-dot mr-1"></i>蘇州姑蘇區西北街136號</p>
-                  <p class="text-xs text-blue-600 mt-1 font-bold bg-blue-50 inline-block px-1.5 py-0.5 rounded">12月19日 - 12月22日 (3晚)</p>
                 </div>
              </div>
              <a href="https://www.amap.com/search?query=蘇州拙政書苑民宿" target="_blank" class="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-lg text-sm transition-colors">
@@ -493,16 +514,16 @@ createApp({
      return`旅程已結束`;
    });
 
-   // --- 行程資料 ---
+   // --- 行程資料 (Updated with Weekdays) ---
    const days=ref([
-     {day:'Day 1',display:'19',date:'12月19日',city:'上海/蘇州',plans:[
+     {day:'Day 1', weekDay:'FRI', display:'19',date:'12月19日',city:'上海/蘇州',plans:[
        {time:'18:00',title:'出發至澳門機場',note:'由 AIA Tower 出發，檢查護照', transport:'<i class="fa-solid fa-taxi"></i> 的士/巴士前往機場'},
        {time:'19:55',title:'MU2056 起飛',note:'前往上海虹橋 (SHA)'},
        {time:'22:25',title:'抵達上海虹橋',note:'航班落地，前往行李轉盤'},
        {time:'22:55',title:'取行李 & 打車',note:'預計30分鐘取回行李，直接打車前往蘇州', transport:'<i class="fa-solid fa-taxi"></i> 的士/網約車 (約1小時15分)'},
        {time:'00:15',title:'抵達民宿',note:'(次日凌晨) 抵達蘇州拙政書苑民宿辦理入住', transport:'<i class="fa-solid fa-bed"></i> 休息'}
      ]},
-     {day:'Day 2',display:'20',date:'12月20日',city:'蘇州',plans:[
+     {day:'Day 2', weekDay:'SAT', display:'20',date:'12月20日',city:'蘇州',plans:[
        {time:'11:00',title:'蘇州博物館',note:'預約11:00場；貝聿銘建築+鎮館之寶+忠王府', transport:'<i class="fa-solid fa-person-walking"></i> 酒店步行約 2 分鐘 (150米) 即達'},
        {time:'13:10',title:'拙政園',note:'蘇博出口步行3分；東→中→西路線，避折返', transport:'<i class="fa-solid fa-person-walking"></i> 蘇博旁步行 200m'},
        {time:'14:30',title:'啞巴生煎 (臨頓路店)',note:'就在拙政園附近，必點招牌生煎，小心爆汁！', isFood: true, transport:'<i class="fa-solid fa-person-walking"></i> 沿臨頓路步行 400m'},
@@ -511,7 +532,7 @@ createApp({
        {time:'18:10',title:'七里山塘',note:'逛古街、賞夜景', transport:'<i class="fa-solid fa-train-subway"></i> 2號線 山塘街站 3號口'},
        {time:'18:40',title:'蠻好閣',note:'山塘街內；必買玫瑰豬油包，香甜軟糯', isFood: true, transport:'<i class="fa-solid fa-person-walking"></i> 山塘街景區內步行'}
      ]},
-     {day:'Day 3',display:'21',date:'12月21日',city:'蘇州',plans:[
+     {day:'Day 3', weekDay:'SUN', display:'21',date:'12月21日',city:'蘇州',plans:[
        {time:'11:00',title:'留園',note:'南→中→北→西路線，必看冠雲峰', transport:'<i class="fa-solid fa-train-subway"></i> 2號線 石路站 1號口 <i class="fa-solid fa-person-walking ml-2"></i> 步行 800m'},
        {time:'12:40',title:'護城河畫舫',note:'乘船看古城牆，悠閒賞景', transport:'<i class="fa-solid fa-person-walking"></i> 步行 600m 至閶門碼頭'},
        {time:'14:10',title:'觀前街',note:'逛老字號、買伴手禮', transport:'<i class="fa-solid fa-train-subway"></i> 4號線 察院場站 2號口'},
@@ -520,13 +541,13 @@ createApp({
        {time:'16:30',title:'金雞湖輪渡日落',note:'月光碼頭出發；12月日落約17:00，此班次最佳', transport:'<i class="fa-solid fa-ticket"></i> 需提前微信預約「蘇州水上巴士」'},
        {time:'18:00',title:'金雞湖夜景',note:'望湖閣碼頭下船，觀賞東方之門燈光', transport:'<i class="fa-solid fa-ship"></i> 乘船抵達'}
      ]},
-     {day:'Day 4',display:'22',date:'12月22日',city:'上海',plans:[
+     {day:'Day 4', weekDay:'MON', display:'22',date:'12月22日',city:'上海',plans:[
        {time:'全日',title:'行程待定',note:'自由活動 / 探索上海市區', transport:''}
      ]},
-     {day:'Day 5',display:'23',date:'12月23日',city:'上海',plans:[
+     {day:'Day 5', weekDay:'TUE', display:'23',date:'12月23日',city:'上海',plans:[
        {time:'全日',title:'行程待定',note:'自由活動 / 探索上海市區', transport:''}
      ]},
-     {day:'Day 6',display:'24',date:'12月24日',city:'上海 -> 澳門',plans:[
+     {day:'Day 6', weekDay:'WED', display:'24',date:'12月24日',city:'上海 -> 澳門',plans:[
        {time:'13:00',title:'抵達虹橋機場 T1',note:'提早 3 小時到達，辦理登機及托運手續', transport:'<i class="fa-solid fa-suitcase"></i> 值機'},
        {time:'16:05',title:'MU2055 起飛',note:'飛往澳門 (MFM)', transport:'<i class="fa-solid fa-plane"></i> 東方航空'},
        {time:'18:50',title:'抵達澳門',note:'平安返家', transport:'<i class="fa-solid fa-house"></i>'}
