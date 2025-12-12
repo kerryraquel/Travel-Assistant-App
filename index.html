@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>Travel Assistant ✈️ 蘇州上海</title>
+<title>蘇州上海建築美學之旅</title>
 
 <!-- --- 📱 主畫面圖示設定 --- -->
 <link rel="apple-touch-icon" sizes="180x180" href="https://cdn-icons-png.flaticon.com/512/2160/2160067.png">
@@ -72,6 +72,22 @@ body {
 .timeline-dot.food {
   background: #f59e0b;
   box-shadow: 0 0 0 2px #fde68a;
+}
+.timeline-dot.xmas {
+  background: #dc2626; /* Red for Christmas */
+  box-shadow: 0 0 0 2px #fecaca;
+}
+.timeline-dot.arch {
+  background: #7c3aed; /* Purple for Architecture */
+  box-shadow: 0 0 0 2px #ddd6fe;
+}
+.timeline-dot.walk {
+  background: #10b981; /* Green for Walking/Nature */
+  box-shadow: 0 0 0 2px #a7f3d0;
+}
+.timeline-dot.ferry {
+  background: #0ea5e9; /* Blue for Ferry/Water */
+  box-shadow: 0 0 0 2px #bae6fd;
 }
 
 /* Transport Tag Style */
@@ -179,8 +195,7 @@ body {
     <!-- Header -->
     <header class="flex justify-between items-start mb-6">
       <div class="drop-shadow-md pt-1">
-        <h1 class="text-2xl font-black text-slate-800 tracking-tight" style="text-shadow: 0 2px 4px rgba(255,255,255,0.8);">Travel Assistant</h1>
-        <p class="text-sm text-slate-600 font-bold" style="text-shadow: 0 1px 2px rgba(255,255,255,0.8);">蘇州 & 上海之旅</p>
+        <h1 class="text-xl font-black text-slate-800 tracking-tight leading-tight" style="text-shadow: 0 2px 4px rgba(255,255,255,0.8);">蘇州上海<br>建築美學之旅</h1>
       </div>
       
       <!-- 天氣模組 -->
@@ -238,18 +253,35 @@ body {
           
           <div class="timeline">
             <div v-for="p in selDay.plans" :key="p.time" class="timeline-item">
-              <div :class="['timeline-dot', p.isFood ? 'food' : '']"></div>
+              <!-- Dot Logic -->
+              <div :class="['timeline-dot', 
+                p.isFood ? 'food' : '', 
+                p.isXmas ? 'xmas' : '', 
+                p.isArch ? 'arch' : '', 
+                p.isWalk ? 'walk' : '',
+                p.isFerry ? 'ferry' : ''
+              ]"></div>
+              
               <div class="flex flex-col">
                 <div class="flex items-baseline gap-2 mb-1">
                   <span class="text-sm font-black text-blue-600 font-mono">{{ p.time }}</span>
                   <span class="text-base font-bold text-slate-800">
                     <i v-if="p.isFood" class="fa-solid fa-utensils text-amber-500 mr-1 text-xs"></i>
+                    <i v-if="p.isXmas" class="fa-solid fa-tree text-red-500 mr-1 text-xs"></i>
+                    <i v-if="p.isArch" class="fa-solid fa-landmark text-purple-500 mr-1 text-xs"></i>
+                    <i v-if="p.isWalk" class="fa-solid fa-person-walking-luggage text-emerald-500 mr-1 text-xs"></i>
+                    <i v-if="p.isFerry" class="fa-solid fa-ship text-sky-500 mr-1 text-xs"></i>
                     {{ p.title }}
                   </span>
                 </div>
                 
                 <!-- 內容備註 -->
-                <span :class="['text-sm text-slate-500 leading-relaxed p-2 rounded-lg border mb-1 block', p.isFood ? 'bg-amber-50 border-amber-100 text-slate-600' : 'bg-white/50 border-slate-100']">
+                <span :class="['text-sm text-slate-500 leading-relaxed p-2 rounded-lg border mb-1 block', 
+                  p.isFood ? 'bg-amber-50 border-amber-100 text-slate-600' : 
+                  p.isXmas ? 'bg-red-50 border-red-100 text-slate-700' : 
+                  p.isArch ? 'bg-purple-50 border-purple-100 text-slate-700' : 
+                  p.isWalk ? 'bg-emerald-50 border-emerald-100 text-slate-700' : 
+                  p.isFerry ? 'bg-sky-50 border-sky-100 text-slate-700' : 'bg-white/50 border-slate-100']">
                   {{ p.note }}
                 </span>
 
@@ -417,12 +449,30 @@ body {
                  <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-1 rounded-full">12/22 - 12/24</span>
                </div>
                <div class="text-sm text-slate-500 mb-1 flex items-center italic">
-                 <i class="fa-solid fa-circle-question mr-2 text-slate-300"></i> 建議：天潼路/陝西南路
+                 <i class="fa-solid fa-circle-question mr-2 text-slate-300"></i> 建議：天潼路/曲阜路 (近12號線)
                </div>
                <div class="text-xs text-orange-400 pl-6 font-bold">待預訂</div>
              </div>
           </div>
           
+          <!-- 建築遺珠 (更新版) -->
+          <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 mb-4">
+             <h3 class="font-bold text-slate-700 mb-3 flex items-center">
+               <i class="fa-solid fa-star-half-stroke text-amber-500 mr-2"></i> 建築遺珠 (本次未排入)
+             </h3>
+             <div class="space-y-3">
+                <div v-for="spot in missedSpots" :key="spot.name" class="flex gap-3 items-start pb-2 border-b border-slate-200 last:border-0 last:pb-0">
+                   <div class="bg-white w-10 h-10 rounded-lg flex items-center justify-center shadow-sm shrink-0 text-slate-400">
+                      <i :class="spot.icon"></i>
+                   </div>
+                   <div>
+                      <div class="font-bold text-sm text-slate-800">{{ spot.name }}</div>
+                      <div class="text-[11px] text-slate-500 leading-tight mt-0.5">{{ spot.reason }}</div>
+                   </div>
+                </div>
+             </div>
+          </div>
+
           <!-- 蘇州博物館卡片 -->
           <div class="bg-slate-800 text-white rounded-xl p-4 relative overflow-hidden flex justify-between items-center mb-4">
             <div class="absolute top-0 right-0 p-4 opacity-10 text-6xl pointer-events-none"><i class="fa-solid fa-building-columns"></i></div>
@@ -506,7 +556,6 @@ createApp({
       return '陰天';
    };
 
-   // 抓取單一城市天氣的函數
    const fetchCityWeather = async (lat, long) => {
       try {
         const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${long}&current_weather=true`);
@@ -523,19 +572,13 @@ createApp({
       }
    };
 
-   // 更新所有城市天氣
    const updateAllWeather = async () => {
-      // 蘇州 (31.2989, 120.5853)
       weatherSz.value = await fetchCityWeather(31.2989, 120.5853);
-      // 上海 (31.2304, 121.4737)
       weatherSh.value = await fetchCityWeather(31.2304, 121.4737);
    };
 
    onMounted(()=>{
-     // 1. 立即執行一次
      updateAllWeather();
-     
-     // 2. 設定每小時 (3600000 ms) 自動更新
      setInterval(updateAllWeather, 3600000);
    });
 
@@ -554,43 +597,44 @@ createApp({
    // --- 行程資料 ---
    const days=ref([
      {day:'Day 1', weekDay:'FRI', display:'19',date:'12月19日',city:'上海/蘇州',plans:[
-       {time:'18:00',title:'出發至澳門機場',note:'由 AIA Tower 出發，檢查護照', transport:'<span class="text-slate-400">從公司:</span> <i class="fa-solid fa-taxi"></i> 的士/巴士前往機場 (約20分鐘)'},
+       {time:'18:00',title:'出發至澳門機場',note:'由 AIA Tower 出發，請檢查：身份證、回鄉證', transport:'<span class="text-slate-400">從公司:</span> <i class="fa-solid fa-taxi"></i> 的士/巴士前往機場 (約20分鐘)'},
        {time:'19:55',title:'MU2056 起飛',note:'前往上海虹橋 (SHA)', transport:'<span class="text-slate-400">機場內:</span> <i class="fa-solid fa-person-walking"></i> 步行至登機閘口'},
        {time:'22:25',title:'抵達上海虹橋',note:'航班落地，前往行李轉盤', transport:'<i class="fa-solid fa-plane"></i> 飛行時間 2小時30分'},
        {time:'22:55',title:'取行李 & 打車',note:'預計30分鐘取回行李，直接打車前往蘇州', transport:'<span class="text-slate-400">從虹橋T1:</span> <i class="fa-solid fa-taxi"></i> 網約車/的士直達蘇州民宿 (約85公里/1小時15分)'},
        {time:'00:15',title:'抵達民宿',note:'(次日凌晨) 抵達蘇州拙政書苑民宿辦理入住', transport:'<i class="fa-solid fa-bed"></i> 辦理入住手續'}
      ]},
      {day:'Day 2', weekDay:'SAT', display:'20',date:'12月20日',city:'蘇州',plans:[
-       {time:'11:00',title:'蘇州博物館',note:'預約11:00場；貝聿銘建築+鎮館之寶+忠王府', transport:'<span class="text-slate-400">從民宿:</span> <i class="fa-solid fa-person-walking"></i> 步行 150米 (約2分鐘) 即達'},
-       {time:'13:10',title:'拙政園',note:'蘇博出口步行3分；東→中→西路線，避折返', transport:'<span class="text-slate-400">從蘇博:</span> <i class="fa-solid fa-person-walking"></i> 步行 200米 (就在隔壁)'},
-       {time:'14:30',title:'啞巴生煎 (臨頓路店)',note:'就在拙政園附近，必點招牌生煎，小心爆汁！', isFood: true, transport:'<span class="text-slate-400">從拙政園:</span> <i class="fa-solid fa-person-walking"></i> 沿臨頓路步行 400米 (約6分鐘)'},
-       {time:'15:40',title:'平江路歷史街區',note:'逛水巷，體驗小橋流水人家', transport:'<span class="text-slate-400">從生煎店:</span> <i class="fa-solid fa-person-walking"></i> 步行 500米 至平江路北入口'},
+       {time:'10:30',title:'啞巴生煎 (臨頓路店)',note:'【先食後行】避開午餐高峰，先吃蘇州最有名生煎！', isFood: true, transport:'<span class="text-slate-400">從民宿:</span> <i class="fa-solid fa-person-walking"></i> 步行約 10分鐘'},
+       {time:'11:40',title:'蘇州博物館',note:'貝聿銘封山之作，幾何與光影的極致', isArch: true, transport:'<span class="text-slate-400">從生煎店:</span> <i class="fa-solid fa-person-walking"></i> 步行 400米 (約6分鐘)'},
+       {time:'13:40',title:'拙政園',note:'蘇博出口步行3分；東→中→西路線，避折返', transport:'<span class="text-slate-400">從蘇博:</span> <i class="fa-solid fa-person-walking"></i> 步行 200米 (就在隔壁)'},
+       {time:'15:40',title:'平江路歷史街區',note:'逛水巷，體驗小橋流水人家', transport:'<span class="text-slate-400">從拙政園:</span> <i class="fa-solid fa-person-walking"></i> 步行 500米 至平江路北入口'},
        {time:'17:00',title:'雙塔市集',note:'吃芋泥麻薯、糖粥', transport:'<span class="text-slate-400">從平江路南端:</span> <i class="fa-solid fa-person-walking"></i> 步行 800米 (約12分鐘) 或 <i class="fa-solid fa-taxi"></i> 打車起步價'},
        {time:'18:10',title:'七里山塘',note:'逛古街、賞夜景', transport:'<span class="text-slate-400">從雙塔:</span> 步行至臨頓路站 <i class="fa-solid fa-train-subway"></i> 地鐵1號線(往木瀆)→廣濟南路轉2號線→山塘街站 (約25分鐘)'},
-       {time:'18:40',title:'蠻好閣',note:'山塘街內；必買玫瑰豬油包，香甜軟糯', isFood: true, transport:'<span class="text-slate-400">景區內:</span> <i class="fa-solid fa-person-walking"></i> 步行約 300米'}
+       {time:'19:00',title:'山塘街特色晚餐',note:'【行程調整】在景區內享用晚餐 (推薦松鶴樓或當地小吃)', isFood: true, transport:'<span class="text-slate-400">景區內:</span> <i class="fa-solid fa-person-walking"></i> 步行前往餐廳'}
      ]},
      {day:'Day 3', weekDay:'SUN', display:'21',date:'12月21日',city:'蘇州',plans:[
        {time:'11:00',title:'留園',note:'南→中→北→西路線，必看冠雲峰', transport:'<span class="text-slate-400">從民宿:</span> 步行至北寺塔站 <i class="fa-solid fa-train-subway"></i> 地鐵4號線→蘇州火車站轉2號線→石路站1號口 <i class="fa-solid fa-person-walking"></i> 步行800米'},
        {time:'12:40',title:'護城河畫舫',note:'乘船看古城牆，悠閒賞景', transport:'<span class="text-slate-400">從留園:</span> <i class="fa-solid fa-person-walking"></i> 步行 600米 至閶門碼頭'},
        {time:'14:10',title:'觀前街',note:'逛老字號、買伴手禮', transport:'<span class="text-slate-400">從閶門:</span> <i class="fa-solid fa-taxi"></i> 打車約15分鐘 (地鐵需轉線較麻煩)'},
        {time:'15:20',title:'滄浪亭',note:'小而精的古典園林，人少好拍', transport:'<span class="text-slate-400">從觀前街:</span> 步行至察院場站 <i class="fa-solid fa-train-subway"></i> 地鐵4號線(往同里)→三元坊站2號口 <i class="fa-solid fa-person-walking"></i> 步行200米'},
-       {time:'16:40',title:'阿月煲 (十全街店)',note:'蘇幫菜老店，酥蹄煲必點！', isFood: true, transport:'<span class="text-slate-400">從滄浪亭:</span> <i class="fa-solid fa-person-walking"></i> 沿十全街步行 450米 (約7分鐘)'},
-       {time:'16:30',title:'金雞湖輪渡日落',note:'月光碼頭出發；12月日落約17:00', transport:'<span class="text-slate-400">從十全街:</span> <i class="fa-solid fa-taxi"></i> 打車約25分鐘 (跨區距離較遠)'},
-       {time:'18:00',title:'金雞湖夜景',note:'望湖閣碼頭下船，觀賞東方之門燈光', transport:'<i class="fa-solid fa-ship"></i> 乘船抵達對岸'}
+       {time:'17:00',title:'阿月煲 (十全街店)',note:'【行程調整】蘇幫菜老店，酥蹄煲必點！', isFood: true, transport:'<span class="text-slate-400">從滄浪亭:</span> <i class="fa-solid fa-person-walking"></i> 沿十全街步行 450米 (約7分鐘)'},
+       {time:'18:30',title:'金雞驛09 (東遊客中心)',note:'極簡白建築，湖畔休憩與攝影的好去處', isArch: true, transport:'<span class="text-slate-400">從十全街:</span> <i class="fa-solid fa-taxi"></i> 打車約25分鐘 (跨區距離較遠)'},
+       {time:'19:30',title:'金雞湖夜景',note:'望湖閣碼頭下船，觀賞東方之門燈光', transport:'<i class="fa-solid fa-ship"></i> 乘船抵達對岸'}
      ]},
      {day:'Day 4', weekDay:'MON', display:'22',date:'12月22日',city:'上海',plans:[
-       {time:'13:00',title:'抵達上海',note:'蘇州站高鐵→上海站，建議入住天潼路/曲阜路附近', transport:'<span class="text-slate-400">從蘇州:</span> <i class="fa-solid fa-train"></i> 高鐵(約30分) → <i class="fa-solid fa-taxi"></i> 打車/地鐵至酒店'},
-       {time:'14:00',title:'外灘萬國建築群',note:'日光下欣賞和平飯店、海關大樓等建築細節', transport:'<span class="text-slate-400">從酒店:</span> <i class="fa-solid fa-train-subway"></i> 地鐵2/10號線 南京東路站'},
-       {time:'15:30',title:'北外灘濱江',note:'經外白渡橋、乍浦路橋，一路往東漫步', transport:'<span class="text-slate-400">從外灘:</span> <i class="fa-solid fa-person-walking"></i> 沿蘇州河/黃浦江邊步行'},
-       {time:'16:40',title:'公平路渡口 (日落/夜景)',note:'搭乘輪渡(泰公線)往返浦東，2元看百萬夜景', transport:'<span class="text-slate-400">從音樂之門:</span> <i class="fa-solid fa-person-walking"></i> 步行約 5分鐘 至渡口'},
-       {time:'18:00',title:'上海大悅城',note:'晚餐 & 摩天輪夜景 (天潼路站)', isFood: true, transport:'<span class="text-slate-400">從渡口:</span> 步行至提籃橋站 <i class="fa-solid fa-train-subway"></i> 地鐵12號線 (提籃橋→曲阜路) 直達'}
+       {time:'13:00',title:'抵達上海',note:'蘇州站高鐵→上海站，建議入住天潼路/曲阜路附近 (近蘇州河)', transport:'<span class="text-slate-400">從蘇州:</span> <i class="fa-solid fa-train"></i> 高鐵(約30分) → <i class="fa-solid fa-taxi"></i> 打車/地鐵至酒店'},
+       {time:'13:30',title:'萊萊小籠 (天津路)',note:'【新增美食】上海必吃蟹粉小籠，皮薄湯鮮，吃完剛好逛外灘', isFood: true, transport:'<span class="text-slate-400">從酒店:</span> <i class="fa-solid fa-person-walking"></i> 步行或打車至天津路 (近南京東路)'},
+       {time:'14:40',title:'外灘萬國建築群',note:'【日光時段】漫步中山東一路，在陽光下欣賞52幢歷史建築的細節', isArch: true, transport:'<span class="text-slate-400">從萊萊:</span> <i class="fa-solid fa-person-walking"></i> 步行約 10分鐘 至外灘觀景台'},
+       {time:'16:00',title:'北外灘濱江綠地',note:'【午後漫步】沿江向北走，打卡「銀色水滴」，同時拍到陸家嘴與外灘全景', isWalk: true, transport:'<span class="text-slate-400">從外灘:</span> <i class="fa-solid fa-person-walking"></i> 沿江步行約 15-20分鐘'},
+       {time:'17:30',title:'公平路渡口 (夜景)',note:'搭乘輪渡(泰公線)往返浦東，2元看百萬夜景', isFerry: true, transport:'<span class="text-slate-400">從北外灘:</span> <i class="fa-solid fa-person-walking"></i> 步行至公平路碼頭'},
+       {time:'19:00',title:'外灘源德國聖誕集市',note:'上海最正宗！熱紅酒、烤香腸、胡桃夾子 (需購票)；位於圓明園路步行街 (背靠半島酒店)', isXmas: true, transport:'<span class="text-slate-400">從公平路渡口:</span> <i class="fa-solid fa-taxi"></i> 打車約 10分鐘 返回外灘源'}
      ]},
      {day:'Day 5', weekDay:'TUE', display:'23',date:'12月23日',city:'上海',plans:[
-       {time:'10:00',title:'武康路 & 安福路',note:'Citywalk：武康大樓→宋慶齡故居→網紅店', transport:'<span class="text-slate-400">從酒店:</span> <i class="fa-solid fa-train-subway"></i> 地鐵10號線(交通大學站) 或 11號線(交通大學站) 7號口出'},
-       {time:'12:30',title:'番禺路/新華路',note:'午餐時間，感受法租界梧桐樹下的寧靜', isFood: true, transport:'<span class="text-slate-400">從武康路:</span> <i class="fa-solid fa-person-walking"></i> 步行約 1.2公里 (15分鐘) 或 <i class="fa-solid fa-bicycle"></i> 共享單車'},
-       {time:'14:30',title:'張園 & 豐盛里',note:'南京西路商圈，參觀修復後的石庫門建築群', transport:'<span class="text-slate-400">從新華路:</span> 步行至交通大學站 <i class="fa-solid fa-train-subway"></i> 地鐵10/11號線→南京西路站 <i class="fa-solid fa-person-walking"></i> 步行前往'},
-       {time:'16:30',title:'新天地',note:'上海弄堂與現代時尚結合，適合下午茶/逛街', transport:'<span class="text-slate-400">從張園:</span> <i class="fa-solid fa-train-subway"></i> 地鐵13號線(南京西路→新天地) 或 <i class="fa-solid fa-taxi"></i> 打車約15分鐘'},
-       {time:'18:30',title:'陝西南路',note:'晚餐 & 逛街 (IAPM環貿附近)，交通極便利', isFood: true, transport:'<span class="text-slate-400">從新天地:</span> <i class="fa-solid fa-train-subway"></i> 地鐵10號線(新天地→陝西南路) 僅1站'}
+       {time:'10:00',title:'武康路 & 安福路 City Walk',note:'起點武康大樓，沿途打卡RAC Bar、Sunflour，逛話梅、BM等潮店', isWalk: true, transport:'<span class="text-slate-400">從酒店:</span> <i class="fa-solid fa-train-subway"></i> 地鐵10/11號線 交通大學站 7號口'},
+       {time:'12:30',title:'番禺路/新華路',note:'午餐時間，感受法租界梧桐樹下的寧靜', isWalk: true, isFood: true, transport:'<span class="text-slate-400">從安福路:</span> <i class="fa-solid fa-taxi"></i> 打車約 10分鐘 至新華路 (上海第一花園馬路)'},
+       {time:'14:30',title:'新天地 (石庫門)',note:'【建築重點】參觀「屋里廂」石庫門博物館，穿梭弄堂看青磚步行街', isArch: true, transport:'<span class="text-slate-400">從新華路:</span> <i class="fa-solid fa-taxi"></i> 打車約 15分鐘 至新天地'},
+       {time:'16:00',title:'恒基·旭輝天地',note:'Jean Nouvel 設計，標誌性的紅色內庭與綠植，就在新天地附近', isArch: true, transport:'<span class="text-slate-400">從新天地:</span> <i class="fa-solid fa-person-walking"></i> 步行約 600米 (馬當路)'},
+       {time:'17:30',title:'陝西南路 & iapm商圈',note:'連接淮海中路，iapm商場好逛，周邊進賢路/長樂路有很多Bistro和小店，晚餐首選！', isFood: true, transport:'<span class="text-slate-400">從旭輝:</span> <i class="fa-solid fa-train-subway"></i> 地鐵13號線 (馬當路→淮海中路) 或步行 1.5km'}
      ]},
      {day:'Day 6', weekDay:'WED', display:'24',date:'12月24日',city:'上海 -> 澳門',plans:[
        {time:'13:00',title:'抵達虹橋機場 T1',note:'提早 3 小時到達，辦理登機及托運手續', transport:'<span class="text-slate-400">從市區:</span> <i class="fa-solid fa-train-subway"></i> 地鐵10號線 至 虹橋1號航站樓站 (注意是T1)'},
@@ -599,6 +643,15 @@ createApp({
      ]}
    ]);
    const selDay=ref(days.value[0]);
+
+   // --- 遺珠之憾 (已更新：蘇州圖書館北館 & 御窯遺址園) ---
+   const missedSpots = [
+     {name: 'GATE M 西岸夢中心', icon: 'fa-solid fa-industry', reason: '因行程調整至北外灘，西岸距離較遠故割愛，若時間充裕可於Day 5下午前往。'},
+     {name: '蘇州圖書館北館 (第二圖書館)', icon: 'fa-solid fa-book-open', reason: '擁有全自動智能書庫，建築設計如「飄浮的紙張」，但位於相城區，距離市中心較遠。'},
+     {name: '蘇州御窯金磚博物館 (遺址園)', icon: 'fa-solid fa-layer-group', reason: '劉家琨設計，粗獷磚窯風格與光影極佳，乃紫禁城地磚產地，同樣位於相城區，需專程前往。'},
+     {name: '天安千樹', icon: 'fa-solid fa-tree', reason: '蘇州河畔的「古巴比倫空中花園」，建築造型獨特，但路線不順。'},
+     {name: '上海保利大劇院', icon: 'fa-solid fa-masks-theater', reason: '安藤忠雄設計，位於嘉定遠郊，需專程前往。'}
+   ];
 
    // --- 記帳 ---
    const rate=ref(1.16);
@@ -620,7 +673,7 @@ createApp({
    
    onMounted(()=>records.value=JSON.parse(localStorage.getItem('tripRecords')||'[]'));
 
-   return{tab,weatherSz,weatherSh,countText,days,selDay,rate,e,cats,pays,records,addRec,catIcon};
+   return{tab,weatherSz,weatherSh,countText,days,selDay,rate,e,cats,pays,records,addRec,catIcon,missedSpots};
  }
 }).mount('#app');
 </script>
