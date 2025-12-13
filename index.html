@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>蘇州上海建築美學之旅</title>
+<title>帶媽咪去旅行-蘇州上海之旅</title>
 
-<!-- --- 📱 主畫面圖示設定 (已更新) --- -->
+<!-- --- 📱 主畫面圖示設定 --- -->
 <link rel="apple-touch-icon" sizes="180x180" href="https://raw.githubusercontent.com/kerryraquel/Travel-Image/main/1000_F_123409002_IOTrT0nqPqDtDzHpPMLAgA8dTW5Xdqtl.jpg">
 <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/kerryraquel/Travel-Image/main/1000_F_123409002_IOTrT0nqPqDtDzHpPMLAgA8dTW5Xdqtl.jpg">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -69,34 +69,20 @@ body {
   background: var(--primary); border: 3px solid #fff;
   border-radius: 50%; box-shadow: 0 0 0 2px #bfdbfe;
 }
-.timeline-dot.food {
-  background: #f59e0b;
-  box-shadow: 0 0 0 2px #fde68a;
-}
-.timeline-dot.xmas {
-  background: #dc2626; /* Red for Christmas */
-  box-shadow: 0 0 0 2px #fecaca;
-}
-.timeline-dot.arch {
-  background: #7c3aed; /* Purple for Architecture */
-  box-shadow: 0 0 0 2px #ddd6fe;
-}
-.timeline-dot.walk {
-  background: #10b981; /* Green for Walking/Nature */
-  box-shadow: 0 0 0 2px #a7f3d0;
-}
-.timeline-dot.ferry {
-  background: #0ea5e9; /* Blue for Ferry/Water */
-  box-shadow: 0 0 0 2px #bae6fd;
-}
+.timeline-dot.food { background: #f59e0b; box-shadow: 0 0 0 2px #fde68a; }
+.timeline-dot.xmas { background: #dc2626; box-shadow: 0 0 0 2px #fecaca; }
+.timeline-dot.arch { background: #7c3aed; box-shadow: 0 0 0 2px #ddd6fe; }
+.timeline-dot.walk { background: #10b981; box-shadow: 0 0 0 2px #a7f3d0; }
+.timeline-dot.ferry { background: #0ea5e9; box-shadow: 0 0 0 2px #bae6fd; }
+.timeline-dot.night { background: #1e3a8a; box-shadow: 0 0 0 2px #93c5fd; }
 
 /* Transport Tag Style */
 .transport-tag {
   display: inline-block;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   background-color: #eff6ff;
   color: #3b82f6;
-  padding: 6px 10px;
+  padding: 8px 12px;
   border-radius: 8px;
   margin-top: 8px;
   font-weight: 600;
@@ -106,7 +92,20 @@ body {
 }
 .transport-tag i { margin-right: 4px; width: 14px; text-align: center; }
 
-/* --- Day Tabs --- */
+/* Ticket Badge */
+.ticket-badge {
+  display: inline-block;
+  font-size: 0.65rem;
+  background-color: #dcfce7;
+  color: #166534;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-left: 6px;
+  vertical-align: middle;
+  border: 1px solid #bbf7d0;
+}
+
+/* --- Day Tabs / Calendar Bar --- */
 .day-scroll {
   display: flex; overflow-x: auto; gap: 0.75rem;
   padding: 0.5rem 0.25rem 1rem 0.25rem;
@@ -125,6 +124,7 @@ body {
   background: #2563eb; color: white;
   box-shadow: 0 8px 16px rgba(37, 99, 235, 0.3);
   transform: translateY(-2px);
+  border: 1px solid rgba(255,255,255,0.2);
 }
 
 /* --- Flight UI --- */
@@ -182,6 +182,8 @@ body {
 /* --- Animations --- */
 .fade-enter-active, .fade-leave-active { transition: opacity 0.2s ease; }
 .fade-enter-from, .fade-leave-to { opacity: 0; }
+.list-enter-active, .list-leave-active { transition: all 0.3s ease; }
+.list-enter-from, .list-leave-to { opacity: 0; transform: translateX(20px); }
 </style>
 </head>
 
@@ -195,7 +197,7 @@ body {
     <!-- Header -->
     <header class="flex justify-between items-start mb-6">
       <div class="drop-shadow-md pt-1">
-        <h1 class="text-xl font-black text-slate-800 tracking-tight leading-tight" style="text-shadow: 0 2px 4px rgba(255,255,255,0.8);">蘇州上海<br>建築美學之旅</h1>
+        <h1 class="text-xl font-black text-slate-800 tracking-tight leading-tight" style="text-shadow: 0 2px 4px rgba(255,255,255,0.8);">帶媽咪去旅行<br>蘇州上海之旅</h1>
       </div>
       
       <!-- 天氣模組 -->
@@ -231,7 +233,7 @@ body {
           <div class="text-sm font-bold text-slate-700">{{ countText }}</div>
         </div>
 
-        <!-- 日期選擇器 -->
+        <!-- 行事曆/日期選擇器 -->
         <div class="day-scroll">
           <div v-for="d in days" :key="d.date" @click="selDay=d"
                :class="['day-tab', selDay.date===d.date?'active':'']">
@@ -259,7 +261,8 @@ body {
                 p.isXmas ? 'xmas' : '', 
                 p.isArch ? 'arch' : '', 
                 p.isWalk ? 'walk' : '',
-                p.isFerry ? 'ferry' : ''
+                p.isFerry ? 'ferry' : '',
+                p.isNight ? 'night' : ''
               ]"></div>
               
               <div class="flex flex-col">
@@ -271,7 +274,9 @@ body {
                     <i v-if="p.isArch" class="fa-solid fa-landmark text-purple-500 mr-1 text-xs"></i>
                     <i v-if="p.isWalk" class="fa-solid fa-person-walking-luggage text-emerald-500 mr-1 text-xs"></i>
                     <i v-if="p.isFerry" class="fa-solid fa-ship text-sky-500 mr-1 text-xs"></i>
+                    <i v-if="p.isNight" class="fa-solid fa-moon text-blue-800 mr-1 text-xs"></i>
                     {{ p.title }}
+                    <span v-if="p.hasTicket" class="ticket-badge"><i class="fa-solid fa-check"></i> 已購票</span>
                   </span>
                 </div>
                 
@@ -281,7 +286,8 @@ body {
                   p.isXmas ? 'bg-red-50 border-red-100 text-slate-700' : 
                   p.isArch ? 'bg-purple-50 border-purple-100 text-slate-700' : 
                   p.isWalk ? 'bg-emerald-50 border-emerald-100 text-slate-700' : 
-                  p.isFerry ? 'bg-sky-50 border-sky-100 text-slate-700' : 'bg-white/50 border-slate-100']">
+                  p.isFerry ? 'bg-sky-50 border-sky-100 text-slate-700' : 
+                  p.isNight ? 'bg-blue-50 border-blue-100 text-slate-700' : 'bg-white/50 border-slate-100']">
                   {{ p.note }}
                 </span>
 
@@ -360,15 +366,32 @@ body {
 
       <!-- 💰 記帳 (EXPENSE) -->
       <section v-if="tab==='expense'" key="expense">
+        
+        <!-- 總支出卡片 -->
+        <div class="glass-card bg-gradient-to-r from-blue-600 to-indigo-600 !border-0 text-white mb-4 shadow-lg shadow-blue-200">
+          <div class="flex justify-between items-start">
+            <div>
+              <div class="text-xs font-bold opacity-80 mb-1 tracking-wider uppercase">目前總支出</div>
+              <div class="text-3xl font-black tracking-tight">¥ {{ totalExpense.toFixed(2) }}</div>
+            </div>
+            <div class="bg-white/20 p-2 rounded-lg backdrop-blur-sm">
+              <i class="fa-solid fa-wallet text-xl"></i>
+            </div>
+          </div>
+          <div class="mt-2 pt-2 border-t border-white/20 text-sm font-bold opacity-90">
+            ≈ MOP {{ (totalExpense * rate).toFixed(1) }}
+          </div>
+        </div>
+
         <div class="glass-card">
           <h2 class="text-lg font-bold text-slate-800 mb-4">新增支出</h2>
           
           <div class="relative mb-4">
             <span class="absolute left-3 top-3 text-slate-400 font-bold">¥</span>
-            <input v-model.number="e.amount" type="number" placeholder="0.00" 
+            <input v-model="e.amount" type="number" inputmode="decimal" placeholder="0.00" 
                    class="w-full bg-white border border-slate-200 rounded-xl py-3 pl-8 pr-3 text-2xl font-bold text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none">
             <div class="absolute right-3 top-4 text-xs font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded">
-              ≈ MOP {{ (e.amount*rate || 0).toFixed(1) }}
+              ≈ MOP {{ (Number(e.amount)*rate || 0).toFixed(1) }}
             </div>
           </div>
 
@@ -400,8 +423,9 @@ body {
 
         <div v-if="records.length" class="pb-4">
           <h3 class="text-xs font-bold text-slate-600 uppercase tracking-wider mb-2 px-1 bg-white/50 inline-block rounded">紀錄</h3>
-          <div class="space-y-2">
-            <div v-for="(r,i) in records" :key="i" class="bg-white/95 border border-slate-100 rounded-xl p-3 flex justify-between items-center shadow-sm">
+          <transition-group name="list" tag="div" class="space-y-2">
+            <!-- 修正：使用 r.id 作為 key，並且按鈕傳遞 r.id -->
+            <div v-for="r in records" :key="r.id" class="bg-white/95 border border-slate-100 rounded-xl p-3 flex justify-between items-center shadow-sm group relative overflow-hidden">
               <div class="flex items-center gap-3">
                 <div class="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-lg">
                   {{ catIcon(r.cat) }}
@@ -411,21 +435,27 @@ body {
                   <div class="text-xs text-slate-400">{{ r.method }}</div>
                 </div>
               </div>
-              <div class="text-right">
-                <div class="font-bold text-slate-800">¥{{ r.amount }}</div>
-                <div class="text-[10px] text-blue-500 font-bold">MOP {{ (r.amount*rate).toFixed(1) }}</div>
+              <div class="flex items-center gap-3">
+                <div class="text-right">
+                  <div class="font-bold text-slate-800">¥{{ r.amount }}</div>
+                  <div class="text-[10px] text-blue-500 font-bold">MOP {{ (r.amount*rate).toFixed(1) }}</div>
+                </div>
+                <!-- 修正：type="button" 且傳入 ID -->
+                <button type="button" @click="delRec(r.id)" class="w-8 h-8 flex items-center justify-center text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors active:bg-red-100">
+                  <i class="fa-solid fa-trash-can text-sm"></i>
+                </button>
               </div>
             </div>
-          </div>
+          </transition-group>
         </div>
       </section>
 
       <!-- ℹ 資訊 (INFO) -->
       <section v-if="tab==='info'" key="info">
         <div class="glass-card">
-          <h2 class="text-lg font-bold text-slate-800 mb-4 border-b pb-2">旅程概覽</h2>
+          <h2 class="text-lg font-bold text-slate-800 mb-4 border-b pb-2">旅程概覽 & 資訊</h2>
           
-          <!-- 蘇州卡片 (已確認) -->
+          <!-- 蘇州卡片 -->
           <div class="bg-white border border-slate-100 p-4 rounded-xl mb-3 shadow-sm relative overflow-hidden">
             <div class="absolute right-0 top-0 p-3 opacity-5 text-6xl pointer-events-none"><i class="fa-solid fa-water"></i></div>
             <div class="relative z-10">
@@ -440,7 +470,7 @@ body {
             </div>
           </div>
 
-          <!-- 上海卡片 (待確認) -->
+          <!-- 上海卡片 -->
           <div class="bg-white border border-slate-100 p-4 rounded-xl mb-4 shadow-sm relative overflow-hidden">
              <div class="absolute right-0 top-0 p-3 opacity-5 text-6xl pointer-events-none"><i class="fa-solid fa-city"></i></div>
              <div class="relative z-10">
@@ -454,27 +484,9 @@ body {
                <div class="text-xs text-orange-400 pl-6 font-bold">待預訂</div>
              </div>
           </div>
-          
-          <!-- 建築遺珠 (更新版) -->
-          <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 mb-4">
-             <h3 class="font-bold text-slate-700 mb-3 flex items-center">
-               <i class="fa-solid fa-star-half-stroke text-amber-500 mr-2"></i> 建築遺珠 (本次未排入)
-             </h3>
-             <div class="space-y-3">
-                <div v-for="spot in missedSpots" :key="spot.name" class="flex gap-3 items-start pb-2 border-b border-slate-200 last:border-0 last:pb-0">
-                   <div class="bg-white w-10 h-10 rounded-lg flex items-center justify-center shadow-sm shrink-0 text-slate-400">
-                      <i :class="spot.icon"></i>
-                   </div>
-                   <div>
-                      <div class="font-bold text-sm text-slate-800">{{ spot.name }}</div>
-                      <div class="text-[11px] text-slate-500 leading-tight mt-0.5">{{ spot.reason }}</div>
-                   </div>
-                </div>
-             </div>
-          </div>
 
           <!-- 蘇州博物館卡片 -->
-          <div class="bg-slate-800 text-white rounded-xl p-4 relative overflow-hidden flex justify-between items-center mb-4">
+          <div class="bg-slate-800 text-white rounded-xl p-4 relative overflow-hidden flex justify-between items-center mb-4 shadow-lg">
             <div class="absolute top-0 right-0 p-4 opacity-10 text-6xl pointer-events-none"><i class="fa-solid fa-building-columns"></i></div>
             
             <div class="relative z-10 flex-1 pr-4">
@@ -492,7 +504,7 @@ body {
           </div>
 
           <!-- 住宿導航按鈕 -->
-          <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
+          <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm mb-4">
              <div class="flex gap-3 mb-3">
                 <img src="https://github.com/kerryraquel/Travel-Image/blob/main/hotel.jpg?raw=true" class="w-20 h-20 object-cover rounded-lg shrink-0 bg-slate-100">
                 <div>
@@ -500,8 +512,8 @@ body {
                   <p class="text-xs text-slate-500 mt-1"><i class="fa-solid fa-location-dot mr-1"></i>蘇州姑蘇區西北街136號</p>
                 </div>
              </div>
-             <a href="https://www.amap.com/search?query=蘇州拙政書苑民宿" target="_blank" class="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-lg text-sm transition-colors">
-               <i class="fa-solid fa-map-location-dot mr-1"></i> 地圖導航
+             <a href="https://www.amap.com/search?query=蘇州拙政書苑民宿" target="_blank" class="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-lg text-sm transition-colors shadow-md shadow-blue-200">
+               <i class="fa-solid fa-map-location-dot mr-1"></i> 地圖導航 (高德)
              </a>
           </div>
 
@@ -604,22 +616,21 @@ createApp({
        {time:'00:15',title:'抵達民宿',note:'(次日凌晨) 抵達蘇州拙政書苑民宿辦理入住', transport:'<i class="fa-solid fa-bed"></i> 辦理入住手續'}
      ]},
      {day:'Day 2', weekDay:'SAT', display:'20',date:'12月20日',city:'蘇州',plans:[
-       {time:'10:30',title:'啞巴生煎 (臨頓路店)',note:'【先食後行】避開午餐高峰，先吃蘇州最有名生煎！', isFood: true, transport:'<span class="text-slate-400">從民宿:</span> <i class="fa-solid fa-person-walking"></i> 步行約 10分鐘'},
-       {time:'11:40',title:'蘇州博物館',note:'貝聿銘封山之作，幾何與光影的極致', isArch: true, transport:'<span class="text-slate-400">從生煎店:</span> <i class="fa-solid fa-person-walking"></i> 步行 400米 (約6分鐘)'},
-       {time:'13:40',title:'拙政園',note:'蘇博出口步行3分；東→中→西路線，避折返', transport:'<span class="text-slate-400">從蘇博:</span> <i class="fa-solid fa-person-walking"></i> 步行 200米 (就在隔壁)'},
-       {time:'15:40',title:'平江路歷史街區',note:'逛水巷，體驗小橋流水人家', transport:'<span class="text-slate-400">從拙政園:</span> <i class="fa-solid fa-person-walking"></i> 步行 500米 至平江路北入口'},
-       {time:'17:00',title:'雙塔市集',note:'吃芋泥麻薯、糖粥', transport:'<span class="text-slate-400">從平江路南端:</span> <i class="fa-solid fa-person-walking"></i> 步行 800米 (約12分鐘) 或 <i class="fa-solid fa-taxi"></i> 打車起步價'},
-       {time:'18:10',title:'七里山塘',note:'逛古街、賞夜景', transport:'<span class="text-slate-400">從雙塔:</span> 步行至臨頓路站 <i class="fa-solid fa-train-subway"></i> 地鐵1號線(往木瀆)→廣濟南路轉2號線→山塘街站 (約25分鐘)'},
-       {time:'19:00',title:'山塘街特色晚餐',note:'【行程調整】在景區內享用晚餐 (推薦松鶴樓或當地小吃)', isFood: true, transport:'<span class="text-slate-400">景區內:</span> <i class="fa-solid fa-person-walking"></i> 步行前往餐廳'}
+       {time:'10:30',title:'美味齋 (西北街)',note:'營業至13:30。老字號麵館，推薦爆魚麵', isFood: true, transport:'位置: 西北街 (近博物館)'},
+       {time:'11:30',title:'蘇州博物館 (本館)',note:'預約時段；貝聿銘封山之作，必看片石假山', isArch: true, transport:'從美味齋: <i class="fa-solid fa-person-walking"></i> 步行即可到達'},
+       {time:'15:00',title:'平江路 & 萬福記',note:'逛古街，買萬福記糕點手信 (營業至20:00)', isWalk: true, transport:'從博物館: <i class="fa-solid fa-person-walking"></i> 步行前往'},
+       {time:'16:00',title:'琵琶語評彈茶館',note:'已購票！聽吳亮瑩老師唱《聲聲慢》', hasTicket: true, transport:'位置: 觀前街 (從平江路步行約10-15分鐘)'},
+       {time:'17:30',title:'前往山塘街',note:'傍晚時分前往，準備看夜景', isWalk: true, transport:'交通: <i class="fa-solid fa-train-subway"></i> 地鐵1號線(相門)轉2號線(山塘街) 或 <i class="fa-solid fa-taxi"></i> 打車'},
+       {time:'18:30',title:'鑫震源 或 榮陽樓',note:'鑫震源(至20:00)大蝦生煎 / 榮陽樓(至19:00)油氽團子', isFood: true, transport:'位置: 山塘街景區內'},
+       {time:'20:30',title:'姑蘇夜畫 (齊門碼頭)',note:'已購票。沈浸式遊船體驗，夜遊蘇州河', isNight: true, hasTicket: true, transport:'位置: 齊門碼頭 (近蘇州城牆博物館) <i class="fa-solid fa-taxi"></i> 從山塘街打車約10分鐘'}
      ]},
      {day:'Day 3', weekDay:'SUN', display:'21',date:'12月21日',city:'蘇州',plans:[
-       {time:'11:00',title:'留園',note:'南→中→北→西路線，必看冠雲峰', transport:'<span class="text-slate-400">從民宿:</span> 步行至北寺塔站 <i class="fa-solid fa-train-subway"></i> 地鐵4號線→蘇州火車站轉2號線→石路站1號口 <i class="fa-solid fa-person-walking"></i> 步行800米'},
-       {time:'12:40',title:'護城河畫舫',note:'乘船看古城牆，悠閒賞景', transport:'<span class="text-slate-400">從留園:</span> <i class="fa-solid fa-person-walking"></i> 步行 600米 至閶門碼頭'},
-       {time:'14:10',title:'觀前街',note:'逛老字號、買伴手禮', transport:'<span class="text-slate-400">從閶門:</span> <i class="fa-solid fa-taxi"></i> 打車約15分鐘 (地鐵需轉線較麻煩)'},
-       {time:'15:20',title:'滄浪亭',note:'小而精的古典園林，人少好拍', transport:'<span class="text-slate-400">從觀前街:</span> 步行至察院場站 <i class="fa-solid fa-train-subway"></i> 地鐵4號線(往同里)→三元坊站2號口 <i class="fa-solid fa-person-walking"></i> 步行200米'},
-       {time:'17:00',title:'阿月煲 (十全街店)',note:'【行程調整】蘇幫菜老店，酥蹄煲必點！', isFood: true, transport:'<span class="text-slate-400">從滄浪亭:</span> <i class="fa-solid fa-person-walking"></i> 沿十全街步行 450米 (約7分鐘)'},
-       {time:'18:30',title:'金雞驛09 (東遊客中心)',note:'極簡白建築，湖畔休憩與攝影的好去處', isArch: true, transport:'<span class="text-slate-400">從十全街:</span> <i class="fa-solid fa-taxi"></i> 打車約25分鐘 (跨區距離較遠)'},
-       {time:'19:30',title:'金雞湖夜景',note:'望湖閣碼頭下船，觀賞東方之門燈光', transport:'<i class="fa-solid fa-ship"></i> 乘船抵達對岸'}
+       {time:'10:30',title:'西園寺 (數羅漢)',note:'必吃素麵，擼貓，並到羅漢堂「數羅漢」測運勢', isFood: true, transport:'從民宿: <i class="fa-solid fa-taxi"></i> 打車約 15分鐘'},
+       {time:'13:00',title:'留園',note:'已購票。中國四大名園之一，精緻小巧', isArch: true, hasTicket: true, transport:'從西園寺: <i class="fa-solid fa-person-walking"></i> 步行約 800米 (10分鐘) 可達'},
+       {time:'15:00',title:'雙塔市集',note:'下午茶小吃：芋泥麻薯、蛋餅', isFood: true, transport:'從留園: <i class="fa-solid fa-taxi"></i> 打車約 20分鐘 至定慧寺巷'},
+       {time:'16:00',title:'前往金雞湖',note:'準備前往看日落 (日落時間約 16:58)', isWalk: true, transport:'從雙塔: <i class="fa-solid fa-train-subway"></i> 地鐵1號線(相門→東方之門) 或 <i class="fa-solid fa-taxi"></i> 打車'},
+       {time:'16:30',title:'金雞湖日落',note:'金水灣棧橋/東方之門，必看夕陽美景', isWalk: true, transport:'位置: 湖濱步道'},
+       {time:'18:30',title:'桃花源記 (晚餐)',note:'營業至21:00。赤豆糊圓子、醬骨頭', isFood: true, transport:'<i class="fa-solid fa-taxi"></i> 打車前往平江路或觀前街分店'}
      ]},
      {day:'Day 4', weekDay:'MON', display:'22',date:'12月22日',city:'上海',plans:[
        {time:'13:00',title:'抵達上海',note:'蘇州站高鐵→上海站，建議入住天潼路/曲阜路附近 (近蘇州河)', transport:'<span class="text-slate-400">從蘇州:</span> <i class="fa-solid fa-train"></i> 高鐵(約30分) → <i class="fa-solid fa-taxi"></i> 打車/地鐵至酒店'},
@@ -644,15 +655,6 @@ createApp({
    ]);
    const selDay=ref(days.value[0]);
 
-   // --- 遺珠之憾 (已更新：蘇州圖書館北館 & 御窯遺址園) ---
-   const missedSpots = [
-     {name: 'GATE M 西岸夢中心', icon: 'fa-solid fa-industry', reason: '因行程調整至北外灘，西岸距離較遠故割愛，若時間充裕可於Day 5下午前往。'},
-     {name: '蘇州圖書館北館 (第二圖書館)', icon: 'fa-solid fa-book-open', reason: '擁有全自動智能書庫，建築設計如「飄浮的紙張」，但位於相城區，距離市中心較遠。'},
-     {name: '蘇州御窯金磚博物館 (遺址園)', icon: 'fa-solid fa-layer-group', reason: '劉家琨設計，粗獷磚窯風格與光影極佳，乃紫禁城地磚產地，同樣位於相城區，需專程前往。'},
-     {name: '天安千樹', icon: 'fa-solid fa-tree', reason: '蘇州河畔的「古巴比倫空中花園」，建築造型獨特，但路線不順。'},
-     {name: '上海保利大劇院', icon: 'fa-solid fa-masks-theater', reason: '安藤忠雄設計，位於嘉定遠郊，需專程前往。'}
-   ];
-
    // --- 記帳 ---
    const rate=ref(1.16);
    const e=ref({amount:'',item:'',cat:'餐飲',method:'支付寶'});
@@ -664,16 +666,44 @@ createApp({
    const pays=['現金','信用卡','支付寶','微信'];
    const catIcon=l=>cats.find(c=>c.label===l)?.icon||'🧾';
    
+   const totalExpense = computed(() => {
+     return records.value.reduce((sum, record) => sum + (Number(record.amount) || 0), 0);
+   });
+   
    const addRec=()=>{
-     if(!e.value.amount||!e.value.item) return;
-     records.value.unshift({...e.value});
+     const amt = parseFloat(e.value.amount);
+     if(isNaN(amt) || e.value.amount === '' || !e.value.item) return;
+     
+     // 1. 確保新增時有 ID
+     records.value.unshift({
+       ...e.value, 
+       amount: amt, 
+       id: Date.now() + Math.random().toString(36).substr(2, 9) // 確保 ID 唯一
+     });
      localStorage.setItem('tripRecords',JSON.stringify(records.value));
      e.value.amount=''; e.value.item='';
    };
-   
-   onMounted(()=>records.value=JSON.parse(localStorage.getItem('tripRecords')||'[]'));
 
-   return{tab,weatherSz,weatherSh,countText,days,selDay,rate,e,cats,pays,records,addRec,catIcon,missedSpots};
+   // 2. 修正後的刪除功能：使用 ID 進行過濾刪除
+   const delRec = (id) => {
+     // 為了測試，先移除 confirm (有些瀏覽器會擋)，直接刪除
+     // 如果需要確認，可以把下面這行取消註解
+     // if(!confirm('確定要刪除這筆支出嗎？')) return;
+
+     records.value = records.value.filter(r => r.id !== id);
+     localStorage.setItem('tripRecords',JSON.stringify(records.value));
+   };
+   
+   onMounted(()=>{
+     const saved = JSON.parse(localStorage.getItem('tripRecords')||'[]');
+     // 3. 自動修復舊資料：如果舊資料沒有 ID，自動補上
+     records.value = saved.map(r => {
+        if(!r.id) return { ...r, id: Date.now() + Math.random().toString(36).substr(2, 9) };
+        return r;
+     });
+   });
+
+   return{tab,weatherSz,weatherSh,countText,days,selDay,rate,e,cats,pays,records,addRec,delRec,catIcon,totalExpense};
  }
 }).mount('#app');
 </script>
