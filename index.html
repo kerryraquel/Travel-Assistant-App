@@ -276,7 +276,7 @@ body {
                     <i v-if="p.isFerry" class="fa-solid fa-ship text-sky-500 mr-1 text-xs"></i>
                     <i v-if="p.isNight" class="fa-solid fa-moon text-blue-800 mr-1 text-xs"></i>
                     {{ p.title }}
-                    <span v-if="p.hasTicket" class="ticket-badge"><i class="fa-solid fa-check"></i> 已購票</span>
+                    <span v-if="p.hasTicket" class="ticket-badge"><i class="fa-solid fa-check"></i> 已預約/購票</span>
                   </span>
                 </div>
                 
@@ -424,7 +424,6 @@ body {
         <div v-if="records.length" class="pb-4">
           <h3 class="text-xs font-bold text-slate-600 uppercase tracking-wider mb-2 px-1 bg-white/50 inline-block rounded">紀錄</h3>
           <transition-group name="list" tag="div" class="space-y-2">
-            <!-- 修正：使用 r.id 作為 key，並且按鈕傳遞 r.id -->
             <div v-for="r in records" :key="r.id" class="bg-white/95 border border-slate-100 rounded-xl p-3 flex justify-between items-center shadow-sm group relative overflow-hidden">
               <div class="flex items-center gap-3">
                 <div class="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-lg">
@@ -440,7 +439,6 @@ body {
                   <div class="font-bold text-slate-800">¥{{ r.amount }}</div>
                   <div class="text-[10px] text-blue-500 font-bold">MOP {{ (r.amount*rate).toFixed(1) }}</div>
                 </div>
-                <!-- 修正：type="button" 且傳入 ID -->
                 <button type="button" @click="delRec(r.id)" class="w-8 h-8 flex items-center justify-center text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors active:bg-red-100">
                   <i class="fa-solid fa-trash-can text-sm"></i>
                 </button>
@@ -466,7 +464,7 @@ body {
               <div class="text-sm text-slate-600 mb-1 flex items-center">
                 <i class="fa-solid fa-bed mr-2 text-slate-400"></i> 蘇州拙政書苑民宿
               </div>
-              <div class="text-xs text-slate-400 pl-6">已確認</div>
+              <div class="text-xs text-emerald-500 pl-6 font-bold"><i class="fa-solid fa-check"></i> 已確認</div>
             </div>
           </div>
 
@@ -478,10 +476,10 @@ body {
                  <h3 class="font-bold text-lg text-slate-800">上海</h3>
                  <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-1 rounded-full">12/22 - 12/24</span>
                </div>
-               <div class="text-sm text-slate-500 mb-1 flex items-center italic">
-                 <i class="fa-solid fa-circle-question mr-2 text-slate-300"></i> 建議：天潼路/曲阜路 (近12號線)
+               <div class="text-sm text-slate-600 mb-1 flex items-center">
+                 <i class="fa-solid fa-bed mr-2 text-slate-400"></i> 落家里.C空间民宿
                </div>
-               <div class="text-xs text-orange-400 pl-6 font-bold">待預訂</div>
+               <div class="text-xs text-emerald-500 pl-6 font-bold"><i class="fa-solid fa-check"></i> 已預訂</div>
              </div>
           </div>
 
@@ -491,9 +489,9 @@ body {
             
             <div class="relative z-10 flex-1 pr-4">
               <h3 class="font-bold text-lg mb-1">蘇州博物館</h3>
-              <p class="text-xs text-slate-300 mb-3">需提前預約 · 週一閉館</p>
-              <div class="text-[10px] text-slate-400 border border-slate-600 rounded px-2 py-1 inline-block">
-                <i class="fa-solid fa-qrcode mr-1"></i> 請長按保存或掃描
+              <p class="text-xs text-slate-300 mb-3">已預約成功 · 週一閉館</p>
+              <div class="text-[10px] text-emerald-300 border border-emerald-600/50 bg-emerald-900/30 rounded px-2 py-1 inline-block">
+                <i class="fa-solid fa-check-circle mr-1"></i> 請備好預約碼/證件
               </div>
             </div>
 
@@ -503,17 +501,32 @@ body {
             </div>
           </div>
 
-          <!-- 住宿導航按鈕 -->
-          <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm mb-4">
+          <!-- 住宿導航按鈕 (蘇州) -->
+          <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm mb-3">
              <div class="flex gap-3 mb-3">
-                <img src="https://github.com/kerryraquel/Travel-Image/blob/main/hotel.jpg?raw=true" class="w-20 h-20 object-cover rounded-lg shrink-0 bg-slate-100">
+                <img src="https://github.com/kerryraquel/Travel-Image/blob/main/hotel.jpg?raw=true" class="w-16 h-16 object-cover rounded-lg shrink-0 bg-slate-100">
                 <div>
-                  <h3 class="font-bold text-slate-800 text-lg leading-tight">蘇州拙政書苑民宿</h3>
+                  <h3 class="font-bold text-slate-800 text-base leading-tight">蘇州拙政書苑民宿</h3>
                   <p class="text-xs text-slate-500 mt-1"><i class="fa-solid fa-location-dot mr-1"></i>蘇州姑蘇區西北街136號</p>
                 </div>
              </div>
              <a href="https://www.amap.com/search?query=蘇州拙政書苑民宿" target="_blank" class="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-lg text-sm transition-colors shadow-md shadow-blue-200">
-               <i class="fa-solid fa-map-location-dot mr-1"></i> 地圖導航 (高德)
+               <i class="fa-solid fa-map-location-dot mr-1"></i> 地圖導航 (蘇州)
+             </a>
+          </div>
+
+          <!-- 住宿導航按鈕 (上海) -->
+          <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm mb-4">
+             <div class="flex gap-3 mb-3">
+                <!-- 更新照片: 上海民宿 -->
+                <img src="https://github.com/kerryraquel/Travel-Image/blob/main/IMG_8200.jpeg?raw=true" class="w-16 h-16 object-cover rounded-lg shrink-0 bg-indigo-100" alt="上海落家里民宿">
+                <div>
+                  <h3 class="font-bold text-slate-800 text-base leading-tight">落家里.C空间民宿</h3>
+                  <p class="text-xs text-slate-500 mt-1"><i class="fa-solid fa-location-dot mr-1"></i>上海</p>
+                </div>
+             </div>
+             <a href="https://www.amap.com/search?query=上海落家里民宿" target="_blank" class="block w-full text-center bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 rounded-lg text-sm transition-colors shadow-md shadow-indigo-200">
+               <i class="fa-solid fa-map-location-dot mr-1"></i> 地圖導航 (上海)
              </a>
           </div>
 
@@ -617,7 +630,7 @@ createApp({
      ]},
      {day:'Day 2', weekDay:'SAT', display:'20',date:'12月20日',city:'蘇州',plans:[
        {time:'10:30',title:'美味齋 (西北街)',note:'營業至13:30。老字號麵館，推薦爆魚麵', isFood: true, transport:'位置: 西北街 (近博物館)'},
-       {time:'11:30',title:'蘇州博物館 (本館)',note:'預約時段；貝聿銘封山之作，必看片石假山', isArch: true, transport:'從美味齋: <i class="fa-solid fa-person-walking"></i> 步行即可到達'},
+       {time:'11:30',title:'蘇州博物館 (本館)',note:'已預約成功！貝聿銘封山之作，必看片石假山', isArch: true, hasTicket: true, transport:'從美味齋: <i class="fa-solid fa-person-walking"></i> 步行即可到達'},
        {time:'15:00',title:'平江路 & 萬福記',note:'逛古街，買萬福記糕點手信 (營業至20:00)', isWalk: true, transport:'從博物館: <i class="fa-solid fa-person-walking"></i> 步行前往'},
        {time:'16:00',title:'琵琶語評彈茶館',note:'已購票！聽吳亮瑩老師唱《聲聲慢》', hasTicket: true, transport:'位置: 觀前街 (從平江路步行約10-15分鐘)'},
        {time:'17:30',title:'前往山塘街',note:'傍晚時分前往，準備看夜景', isWalk: true, transport:'交通: <i class="fa-solid fa-train-subway"></i> 地鐵1號線(相門)轉2號線(山塘街) 或 <i class="fa-solid fa-taxi"></i> 打車'},
@@ -633,15 +646,15 @@ createApp({
        {time:'18:30',title:'桃花源記 (晚餐)',note:'營業至21:00。赤豆糊圓子、醬骨頭', isFood: true, transport:'<i class="fa-solid fa-taxi"></i> 打車前往平江路或觀前街分店'}
      ]},
      {day:'Day 4', weekDay:'MON', display:'22',date:'12月22日',city:'上海',plans:[
-       {time:'13:00',title:'抵達上海',note:'蘇州站高鐵→上海站，建議入住天潼路/曲阜路附近 (近蘇州河)', transport:'<span class="text-slate-400">從蘇州:</span> <i class="fa-solid fa-train"></i> 高鐵(約30分) → <i class="fa-solid fa-taxi"></i> 打車/地鐵至酒店'},
-       {time:'13:30',title:'萊萊小籠 (天津路)',note:'【新增美食】上海必吃蟹粉小籠，皮薄湯鮮，吃完剛好逛外灘', isFood: true, transport:'<span class="text-slate-400">從酒店:</span> <i class="fa-solid fa-person-walking"></i> 步行或打車至天津路 (近南京東路)'},
+       {time:'13:00',title:'抵達上海',note:'蘇州站高鐵→上海站，前往 落家里.C空间民宿 辦理入住', transport:'<span class="text-slate-400">從蘇州:</span> <i class="fa-solid fa-train"></i> 高鐵(約30分) → <i class="fa-solid fa-taxi"></i> 打車/地鐵至民宿'},
+       {time:'13:30',title:'萊萊小籠 (天津路)',note:'【新增美食】上海必吃蟹粉小籠，皮薄湯鮮，吃完剛好逛外灘', isFood: true, transport:'<span class="text-slate-400">從民宿:</span> <i class="fa-solid fa-person-walking"></i> 步行或打車至天津路 (近南京東路)'},
        {time:'14:40',title:'外灘萬國建築群',note:'【日光時段】漫步中山東一路，在陽光下欣賞52幢歷史建築的細節', isArch: true, transport:'<span class="text-slate-400">從萊萊:</span> <i class="fa-solid fa-person-walking"></i> 步行約 10分鐘 至外灘觀景台'},
        {time:'16:00',title:'北外灘濱江綠地',note:'【午後漫步】沿江向北走，打卡「銀色水滴」，同時拍到陸家嘴與外灘全景', isWalk: true, transport:'<span class="text-slate-400">從外灘:</span> <i class="fa-solid fa-person-walking"></i> 沿江步行約 15-20分鐘'},
        {time:'17:30',title:'公平路渡口 (夜景)',note:'搭乘輪渡(泰公線)往返浦東，2元看百萬夜景', isFerry: true, transport:'<span class="text-slate-400">從北外灘:</span> <i class="fa-solid fa-person-walking"></i> 步行至公平路碼頭'},
        {time:'19:00',title:'外灘源德國聖誕集市',note:'上海最正宗！熱紅酒、烤香腸、胡桃夾子 (需購票)；位於圓明園路步行街 (背靠半島酒店)', isXmas: true, transport:'<span class="text-slate-400">從公平路渡口:</span> <i class="fa-solid fa-taxi"></i> 打車約 10分鐘 返回外灘源'}
      ]},
      {day:'Day 5', weekDay:'TUE', display:'23',date:'12月23日',city:'上海',plans:[
-       {time:'10:00',title:'武康路 & 安福路 City Walk',note:'起點武康大樓，沿途打卡RAC Bar、Sunflour，逛話梅、BM等潮店', isWalk: true, transport:'<span class="text-slate-400">從酒店:</span> <i class="fa-solid fa-train-subway"></i> 地鐵10/11號線 交通大學站 7號口'},
+       {time:'10:00',title:'武康路 & 安福路 City Walk',note:'起點武康大樓，沿途打卡RAC Bar、Sunflour，逛話梅、BM等潮店', isWalk: true, transport:'<span class="text-slate-400">從民宿:</span> <i class="fa-solid fa-train-subway"></i> 地鐵10/11號線 交通大學站 7號口'},
        {time:'12:30',title:'番禺路/新華路',note:'午餐時間，感受法租界梧桐樹下的寧靜', isWalk: true, isFood: true, transport:'<span class="text-slate-400">從安福路:</span> <i class="fa-solid fa-taxi"></i> 打車約 10分鐘 至新華路 (上海第一花園馬路)'},
        {time:'14:30',title:'新天地 (石庫門)',note:'【建築重點】參觀「屋里廂」石庫門博物館，穿梭弄堂看青磚步行街', isArch: true, transport:'<span class="text-slate-400">從新華路:</span> <i class="fa-solid fa-taxi"></i> 打車約 15分鐘 至新天地'},
        {time:'16:00',title:'恒基·旭輝天地',note:'Jean Nouvel 設計，標誌性的紅色內庭與綠植，就在新天地附近', isArch: true, transport:'<span class="text-slate-400">從新天地:</span> <i class="fa-solid fa-person-walking"></i> 步行約 600米 (馬當路)'},
@@ -673,30 +686,22 @@ createApp({
    const addRec=()=>{
      const amt = parseFloat(e.value.amount);
      if(isNaN(amt) || e.value.amount === '' || !e.value.item) return;
-     
-     // 1. 確保新增時有 ID
      records.value.unshift({
        ...e.value, 
        amount: amt, 
-       id: Date.now() + Math.random().toString(36).substr(2, 9) // 確保 ID 唯一
+       id: Date.now() + Math.random().toString(36).substr(2, 9) 
      });
      localStorage.setItem('tripRecords',JSON.stringify(records.value));
      e.value.amount=''; e.value.item='';
    };
 
-   // 2. 修正後的刪除功能：使用 ID 進行過濾刪除
    const delRec = (id) => {
-     // 為了測試，先移除 confirm (有些瀏覽器會擋)，直接刪除
-     // 如果需要確認，可以把下面這行取消註解
-     // if(!confirm('確定要刪除這筆支出嗎？')) return;
-
      records.value = records.value.filter(r => r.id !== id);
      localStorage.setItem('tripRecords',JSON.stringify(records.value));
    };
    
    onMounted(()=>{
      const saved = JSON.parse(localStorage.getItem('tripRecords')||'[]');
-     // 3. 自動修復舊資料：如果舊資料沒有 ID，自動補上
      records.value = saved.map(r => {
         if(!r.id) return { ...r, id: Date.now() + Math.random().toString(36).substr(2, 9) };
         return r;
