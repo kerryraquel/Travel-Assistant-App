@@ -483,7 +483,7 @@ body {
              </div>
           </div>
           
-          <!-- 建築遺珠 (更新版) -->
+          <!-- 建築遺珠 -->
           <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 mb-4">
              <h3 class="font-bold text-slate-700 mb-3 flex items-center">
                <i class="fa-solid fa-star-half-stroke text-amber-500 mr-2"></i> 建築遺珠 (本次未排入)
@@ -520,7 +520,7 @@ body {
           </div>
 
           <!-- 住宿導航按鈕 -->
-          <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
+          <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm mb-4">
              <div class="flex gap-3 mb-3">
                 <img src="https://github.com/kerryraquel/Travel-Image/blob/main/hotel.jpg?raw=true" class="w-20 h-20 object-cover rounded-lg shrink-0 bg-slate-100">
                 <div>
@@ -531,6 +531,23 @@ body {
              <a href="https://www.amap.com/search?query=蘇州拙政書苑民宿" target="_blank" class="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-lg text-sm transition-colors">
                <i class="fa-solid fa-map-location-dot mr-1"></i> 地圖導航
              </a>
+          </div>
+
+          <!-- 景點速查索引 -->
+          <div class="glass-card mt-4">
+            <h2 class="text-lg font-bold text-slate-800 mb-4 border-b pb-2">景點速查 & 簡介</h2>
+            <div class="space-y-3">
+               <div v-for="spot in sightseeingSpots" :key="spot.name" class="bg-white/60 p-3 rounded-lg border border-slate-100">
+                  <div class="flex justify-between items-start">
+                     <div>
+                        <span :class="['text-[10px] px-1.5 py-0.5 rounded mr-2', spot.city==='蘇州'?'bg-blue-100 text-blue-600':'bg-indigo-100 text-indigo-600']">{{ spot.city }}</span>
+                        <span class="font-bold text-slate-800">{{ spot.name }}</span>
+                     </div>
+                     <span class="text-[10px] text-slate-400 border border-slate-200 px-1 rounded">{{ spot.tag }}</span>
+                  </div>
+                  <p class="text-xs text-slate-500 mt-1 leading-relaxed">{{ spot.desc }}</p>
+               </div>
+            </div>
           </div>
 
         </div>
@@ -681,6 +698,19 @@ createApp({
      {name: '上海保利大劇院', icon: 'fa-solid fa-masks-theater', reason: '安藤忠雄設計，位於嘉定遠郊，需專程前往。'}
    ];
 
+   // --- 景點速查索引 (新增) ---
+   const sightseeingSpots = [
+     { city: '蘇州', name: '蘇州博物館', tag: '建築', desc: '貝聿銘封山之作，幾何山水，片石假山，將現代建築與傳統園林完美融合。' },
+     { city: '蘇州', name: '拙政園', tag: '園林', desc: '中國四大園林之首，以水見長，庭院錯落，展現明代園林建築風格。' },
+     { city: '蘇州', name: '平江路', tag: '古街', desc: '水陸並行，河街相鄰，最典型的蘇州古城風貌，保留了宋代城市肌理。' },
+     { city: '蘇州', name: '留園', tag: '園林', desc: '以建築空間處理著稱，冠雲峰為太湖石之冠，廳堂宏敞華麗。' },
+     { city: '蘇州', name: '金雞驛09', tag: '建築', desc: '位於金雞湖畔的極簡白色建築，光影效果極佳，現代蘇州的代表。' },
+     { city: '上海', name: '外灘萬國建築群', tag: '地標', desc: '52幢風格迥異的古典復興大樓，上海的歷史縮影，夜景璀璨。' },
+     { city: '上海', name: '武康大樓', tag: '建築', desc: '鄔達克設計，諾曼底公寓，上海最早的外廊式公寓大樓，網紅打卡地標。' },
+     { city: '上海', name: '新天地', tag: '街區', desc: '石庫門弄堂與現代商業的完美結合，保留了上海近代建築的獨特風貌。' },
+     { city: '上海', name: '恒基·旭輝天地', tag: '建築', desc: '讓·努維爾設計，標誌性的紅色內庭與垂直綠化，充滿法式浪漫與前衛感。' }
+   ];
+
    // --- 記帳 ---
    const rate=ref(1.16);
    const e=ref({amount:'',item:'',cat:'餐飲',method:'支付寶'});
@@ -709,7 +739,7 @@ createApp({
    
    onMounted(()=>records.value=JSON.parse(localStorage.getItem('tripRecords')||'[]'));
 
-   return{tab,weatherSz,weatherSh,countText,days,selDay,rate,e,cats,pays,records,addRec,delRec,catIcon,missedSpots};
+   return{tab,weatherSz,weatherSh,countText,days,selDay,rate,e,cats,pays,records,addRec,delRec,catIcon,missedSpots,sightseeingSpots};
  }
 }).mount('#app');
 </script>
