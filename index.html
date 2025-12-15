@@ -518,7 +518,6 @@ body {
           <!-- 住宿導航按鈕 (上海) -->
           <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm mb-4">
              <div class="flex gap-3 mb-3">
-                <!-- 更新照片: 上海民宿 -->
                 <img src="https://github.com/kerryraquel/Travel-Image/blob/main/IMG_8200.jpeg?raw=true" class="w-16 h-16 object-cover rounded-lg shrink-0 bg-indigo-100" alt="上海落家里民宿">
                 <div>
                   <h3 class="font-bold text-slate-800 text-base leading-tight">落家里.C空间民宿</h3>
@@ -531,6 +530,139 @@ body {
           </div>
 
         </div>
+
+        <!-- 城市印象簡介 -->
+        <div class="glass-card mt-4">
+          <h2 class="text-lg font-bold text-slate-800 mb-3 flex items-center">
+            <i class="fa-solid fa-book-open-reader text-emerald-500 mr-2"></i> 城市印象簡介
+          </h2>
+          
+          <!-- Tabs -->
+          <div class="flex p-1 bg-slate-100 rounded-xl mb-4">
+            <button @click="introTab='suzhou'" 
+                    :class="['flex-1 py-2 text-sm font-bold rounded-lg transition-all', introTab==='suzhou' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-400']">
+              蘇州 Suzhou
+            </button>
+            <button @click="introTab='shanghai'" 
+                    :class="['flex-1 py-2 text-sm font-bold rounded-lg transition-all', introTab==='shanghai' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-400']">
+              上海 Shanghai
+            </button>
+          </div>
+
+          <!-- 蘇州內容 -->
+          <div v-if="introTab==='suzhou'" class="animate-fade-in">
+             <div class="relative bg-blue-50/50 p-4 rounded-xl border border-blue-100 mb-3">
+                <i class="fa-solid fa-fan absolute right-2 bottom-2 text-6xl text-blue-200/30"></i>
+                <h3 class="font-black text-xl text-slate-800 mb-1">「人間天堂，東方威尼斯」</h3>
+                <p class="text-sm text-slate-600 leading-relaxed mb-3">
+                  擁有2500年歷史的文化古城。這裡沒有大城市的喧囂，只有小橋流水人家的寧靜。蘇州的美在於「慢」，適合牽著家人的手，慢慢走在平江路的石板路上。
+                </p>
+                <div class="space-y-2">
+                  <div class="flex items-center gap-2 text-xs font-bold text-slate-700">
+                    <span class="bg-blue-100 text-blue-600 px-2 py-1 rounded">必體驗</span>
+                    <span>古典園林、蘇式評彈、遊船</span>
+                  </div>
+                  <div class="flex items-center gap-2 text-xs font-bold text-slate-700">
+                    <span class="bg-amber-100 text-amber-600 px-2 py-1 rounded">美食</span>
+                    <span>蘇式湯麵、生煎、松鼠桂魚</span>
+                  </div>
+                </div>
+             </div>
+          </div>
+
+          <!-- 上海內容 -->
+          <div v-if="introTab==='shanghai'" class="animate-fade-in">
+             <div class="relative bg-indigo-50/50 p-4 rounded-xl border border-indigo-100 mb-3">
+                <i class="fa-solid fa-mug-hot absolute right-2 bottom-2 text-6xl text-indigo-200/30"></i>
+                <h3 class="font-black text-xl text-slate-800 mb-1">「魔都，海納百川」</h3>
+                <p class="text-sm text-slate-600 leading-relaxed mb-3">
+                  現代與復古的完美碰撞。一邊是外灘萬國建築群的歷史滄桑，對岸卻是陸家嘴的高聳入雲。這裡是全球咖啡館最多的城市，充滿時尚氣息，也保留了老弄堂的煙火氣。
+                </p>
+                <div class="space-y-2">
+                  <div class="flex items-center gap-2 text-xs font-bold text-slate-700">
+                    <span class="bg-indigo-100 text-indigo-600 px-2 py-1 rounded">必體驗</span>
+                    <span>外灘夜景、City Walk、梧桐區</span>
+                  </div>
+                  <div class="flex items-center gap-2 text-xs font-bold text-slate-700">
+                    <span class="bg-amber-100 text-amber-600 px-2 py-1 rounded">美食</span>
+                    <span>小籠包、本幫菜、紅燒肉</span>
+                  </div>
+                </div>
+             </div>
+          </div>
+        </div>
+
+        <!-- 景點深度導覽 (新增部分) -->
+        <div class="glass-card mt-4">
+          <h2 class="text-lg font-bold text-slate-800 mb-4 flex items-center">
+            <i class="fa-solid fa-circle-info text-blue-500 mr-2"></i> 景點深度導覽
+          </h2>
+          
+          <div class="space-y-3">
+            <div v-for="item in attractionDetails" :key="item.name" class="bg-white p-4 rounded-xl border border-slate-100 shadow-sm transition-transform active:scale-[0.99]">
+               <!-- Header: City Tag + Title + Category Tag -->
+               <div class="flex justify-between items-start mb-2">
+                 <div class="flex items-center gap-2">
+                   <span :class="['text-[10px] px-1.5 py-0.5 rounded border font-bold', item.city==='蘇州'?'text-blue-500 border-blue-200 bg-blue-50':'text-indigo-500 border-indigo-200 bg-indigo-50']">{{ item.city }}</span>
+                   <h3 class="font-bold text-slate-800 text-base">{{ item.name }}</h3>
+                 </div>
+                 <span class="text-[10px] text-slate-400 border border-slate-200 px-1.5 py-0.5 rounded">{{ item.tag }}</span>
+               </div>
+               <!-- Description -->
+               <p class="text-xs text-slate-500 leading-relaxed text-justify">{{ item.desc }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 景點速查索引 (保留) -->
+        <div class="glass-card mt-4">
+          <h2 class="text-lg font-bold text-slate-800 mb-4 flex items-center">
+            <i class="fa-solid fa-map text-blue-500 mr-2"></i> 景點速查索引
+          </h2>
+
+          <!-- 蘇州區塊 -->
+          <div class="mb-4">
+            <h3 class="text-sm font-bold text-slate-500 uppercase tracking-wider mb-2 pl-1">蘇州 Suzhou</h3>
+            <div class="grid grid-cols-2 gap-3">
+              <a v-for="spot in spots.suzhou" :key="spot.name" 
+                 :href="'https://www.amap.com/search?query=' + spot.name" target="_blank"
+                 class="bg-white p-3 rounded-xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between h-full">
+                 <div class="flex items-start justify-between mb-2">
+                   <div class="w-8 h-8 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center text-sm">
+                     <i :class="['fa-solid', spot.icon]"></i>
+                   </div>
+                   <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded">{{ spot.tag }}</span>
+                 </div>
+                 <div>
+                   <div class="font-bold text-slate-800 text-sm leading-tight mb-1">{{ spot.name }}</div>
+                   <div class="text-[10px] text-slate-400 leading-tight">{{ spot.note }}</div>
+                 </div>
+              </a>
+            </div>
+          </div>
+
+          <!-- 上海區塊 -->
+          <div>
+            <h3 class="text-sm font-bold text-slate-500 uppercase tracking-wider mb-2 pl-1">上海 Shanghai</h3>
+            <div class="grid grid-cols-2 gap-3">
+              <a v-for="spot in spots.shanghai" :key="spot.name" 
+                 :href="'https://www.amap.com/search?query=' + spot.name" target="_blank"
+                 class="bg-white p-3 rounded-xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between h-full">
+                 <div class="flex items-start justify-between mb-2">
+                   <div class="w-8 h-8 rounded-full bg-indigo-50 text-indigo-500 flex items-center justify-center text-sm">
+                     <i :class="['fa-solid', spot.icon]"></i>
+                   </div>
+                   <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded">{{ spot.tag }}</span>
+                 </div>
+                 <div>
+                   <div class="font-bold text-slate-800 text-sm leading-tight mb-1">{{ spot.name }}</div>
+                   <div class="text-[10px] text-slate-400 leading-tight">{{ spot.note }}</div>
+                 </div>
+              </a>
+            </div>
+          </div>
+        </div>
+
       </section>
 
     </transition>
@@ -560,6 +692,7 @@ const {createApp,ref,computed,onMounted}=Vue;
 createApp({
  setup(){
    const tab=ref('plan');
+   const introTab=ref('suzhou'); 
    
    // --- 實時天氣 (蘇州 & 上海) ---
    const weatherSz=ref({temp:'--',desc:'載入中',icon:'fa-solid fa-spinner fa-spin'});
@@ -708,7 +841,38 @@ createApp({
      });
    });
 
-   return{tab,weatherSz,weatherSh,countText,days,selDay,rate,e,cats,pays,records,addRec,delRec,catIcon,totalExpense};
+   // --- 景點索引資料 ---
+   const spots = {
+     suzhou: [
+       { name: '蘇州博物館', tag: '歷史', note: '需提前預約，週一閉館', icon: 'fa-landmark' },
+       { name: '平江路', tag: '古街', note: '適合穿漢服，手搖船體驗', icon: 'fa-umbrella' },
+       { name: '山塘街', tag: '夜景', note: '晚上亮燈後最美，人多注意安全', icon: 'fa-moon' },
+       { name: '西園寺', tag: '寺廟', note: '必吃素麵、數羅漢、擼貓', icon: 'fa-cat' },
+       { name: '留園', tag: '園林', note: '四大名園之一，精緻小巧', icon: 'fa-tree' },
+       { name: '金雞湖', tag: '地標', note: '東方之門，適合看日落', icon: 'fa-camera' }
+     ],
+     shanghai: [
+       { name: '外灘萬國建築', tag: '地標', note: '夜景必看，人流較多', icon: 'fa-building' },
+       { name: '北外灘', tag: '景觀', note: '人少，可拍陸家嘴全景', icon: 'fa-water' },
+       { name: '外灘源集市', tag: '聖誕', note: '圓明園路，需購票入場', icon: 'fa-gift' },
+       { name: '武康路', tag: '逛街', note: '網紅店多，武康大樓打卡', icon: 'fa-coffee' },
+       { name: '新天地', tag: '建築', note: '石庫門弄堂，時尚街區', icon: 'fa-shop' }
+     ]
+   };
+
+   // --- 景點深度導覽資料 (新增) ---
+   const attractionDetails = [
+      { city: '蘇州', name: '蘇州博物館', tag: '建築', desc: '貝聿銘封山之作，幾何山水，片石假山，將現代建築與傳統園林完美融合。' },
+      { city: '蘇州', name: '拙政園', tag: '園林', desc: '中國四大園林之首，以水見長，庭院錯落，展現明代園林建築風格。' },
+      { city: '蘇州', name: '平江路', tag: '古街', desc: '水陸並行，河街相鄰，最典型的蘇州古城風貌，保留了宋代城市肌理。' },
+      { city: '蘇州', name: '留園', tag: '園林', desc: '以建築空間處理著稱，冠雲峰為太湖石之冠，廳堂宏敞華麗。' },
+      { city: '蘇州', name: '金雞驛09', tag: '建築', desc: '位於金雞湖畔的極簡白色建築，光影效果極佳，現代蘇州的代表。' },
+      { city: '上海', name: '外灘萬國建築群', tag: '地標', desc: '52幢風格迥異的古典復興大樓，上海的歷史縮影，夜景璀璨。' },
+      { city: '上海', name: '武康大樓', tag: '建築', desc: '鄔達克設計，諾曼底公寓，上海最早的外廊式公寓大樓，網紅打卡地標。' },
+      { city: '上海', name: '新天地', tag: '街區', desc: '石庫門弄堂與現代商業的完美結合，保留了上海近代建築的獨特風貌。' }
+   ];
+
+   return{tab,weatherSz,weatherSh,countText,days,selDay,rate,e,cats,pays,records,addRec,delRec,catIcon,totalExpense,spots,introTab,attractionDetails};
  }
 }).mount('#app');
 </script>
