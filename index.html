@@ -773,19 +773,19 @@ createApp({
      {day:'Day 2', weekDay:'SAT', display:'20',date:'12月20日',city:'蘇州',plans:[
        {time:'10:30',title:'美味齋 (西北街)',note:'營業至13:30。老字號麵館，推薦爆魚麵', isFood: true, transport:'位置: 西北街 (近博物館)'},
        {time:'11:30',title:'蘇州博物館 (本館)',note:'已預約成功！貝聿銘封山之作，必看片石假山', isArch: true, hasTicket: true, transport:'從美味齋: <i class="fa-solid fa-person-walking"></i> 步行即可到達'},
-       {time:'15:00',title:'平江路 & 萬福記',note:'逛古街，買萬福記糕點手信 (營業至20:00)', isWalk: true, transport:'從博物館: <i class="fa-solid fa-person-walking"></i> 步行前往'},
+       {time:'14:30',title:'平江路 & 萬福記',note:'逛古街，買萬福記糕點手信(至20:00)。午餐推薦：蘇三姑 或 桃花源記。', isWalk: true, isFood: true, transport:'從博物館: <i class="fa-solid fa-person-walking"></i> 步行前往'},
        {time:'16:00',title:'琵琶語評彈茶館',note:'已購票！聽吳亮瑩老師唱《聲聲慢》', hasTicket: true, transport:'位置: 觀前街 (從平江路步行約10-15分鐘)'},
        {time:'17:30',title:'前往山塘街',note:'傍晚時分前往，準備看夜景', isWalk: true, transport:'交通: <i class="fa-solid fa-train-subway"></i> 地鐵1號線(相門)轉2號線(山塘街) 或 <i class="fa-solid fa-taxi"></i> 打車'},
        {time:'18:30',title:'鑫震源 或 榮陽樓',note:'鑫震源(至20:00)大蝦生煎 / 榮陽樓(至19:00)油氽團子', isFood: true, transport:'位置: 山塘街景區內'},
-       {time:'20:30',title:'姑蘇夜畫 (齊門碼頭)',note:'已購票。沈浸式遊船體驗，夜遊蘇州河', isNight: true, hasTicket: true, transport:'位置: 齊門碼頭 (近蘇州城牆博物館) <i class="fa-solid fa-taxi"></i> 從山塘街打車約10分鐘'}
+       {time:'20:30',title:'姑蘇夜畫 (齊門碼頭)',note:'已購票。沈浸式遊船體驗，夜遊蘇州河 (時長約50分鐘)。預計21:20結束，隨後返回民宿休息。', isNight: true, hasTicket: true, transport:'位置: 齊門碼頭 <i class="fa-solid fa-taxi"></i> 從山塘街打車約15-20分鐘'}
      ]},
      {day:'Day 3', weekDay:'SUN', display:'21',date:'12月21日',city:'蘇州',plans:[
        {time:'10:30',title:'西園寺 (數羅漢)',note:'必吃素麵，擼貓，並到羅漢堂「數羅漢」測運勢', isFood: true, transport:'從民宿: <i class="fa-solid fa-taxi"></i> 打車約 15分鐘'},
        {time:'13:00',title:'留園',note:'已購票。中國四大名園之一，精緻小巧', isArch: true, hasTicket: true, transport:'從西園寺: <i class="fa-solid fa-person-walking"></i> 步行約 800米 (10分鐘) 可達'},
-       {time:'15:00',title:'蘇州誠品書店',note:'大陸首家誠品，環境舒適，大樓梯必打卡，適合帶媽咪悠閒逛逛', isBook: true, transport:'從留園: <i class="fa-solid fa-taxi"></i> 打車約 25分鐘 至金雞湖畔'},
-       {time:'16:00',title:'前往金雞湖',note:'準備前往看日落 (日落時間約 16:58)', isWalk: true, transport:'從誠品: <i class="fa-solid fa-person-walking"></i> 步行即可到達湖濱'},
-       {time:'16:30',title:'金雞湖日落',note:'金水灣棧橋/東方之門，必看夕陽美景', isWalk: true, transport:'位置: 湖濱步道'},
-       {time:'18:30',title:'桃花源記 (晚餐)',note:'營業至21:00。赤豆糊圓子、醬骨頭', isFood: true, transport:'<i class="fa-solid fa-taxi"></i> 打車前往平江路或觀前街分店'}
+       {time:'15:00',title:'蘇州誠品書店',note:'大陸首家誠品。可在此享用午膳或休息，大樓梯必打卡。', isBook: true, isFood: true, transport:'從留園: <i class="fa-solid fa-taxi"></i> 打車約 25分鐘 至金雞湖畔'},
+       {time:'16:45',title:'月光碼頭日落',note:'欣賞金雞湖夕陽。入黑後漫步至金水灣棧橋，景色絕美。', isWalk: true, isNight: true, transport:'從誠品: <i class="fa-solid fa-person-walking"></i> 步行即可到達'},
+       {time:'18:30',title:'晚餐推薦',note:'可於月光碼頭附近用餐，隨後前往拙政園', isFood: true, transport:'<i class="fa-solid fa-taxi"></i> 視乎當下位置決定'},
+       {time:'20:45',title:'拙政問雅 (夜遊園林)',note:'最遲21:00入場 (遊覽約90分鐘)。請先出示取票碼至「拙政園西售票廳」自助機打印門票換票。', isNight: true, hasTicket: true, transport:'從金雞湖/晚餐處: <i class="fa-solid fa-taxi"></i> 打車約25-30分鐘至拙政園'}
      ]},
      {day:'Day 4', weekDay:'MON', display:'22',date:'12月22日',city:'上海',plans:[
        {time:'13:00',title:'抵達上海',note:'蘇州站高鐵→上海站，前往 上海外灘333酒店 辦理入住', transport:'<span class="text-slate-400">從蘇州:</span> <i class="fa-solid fa-train"></i> 高鐵(約30分) → <i class="fa-solid fa-taxi"></i> 打車/地鐵至酒店'},
