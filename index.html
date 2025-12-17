@@ -75,6 +75,8 @@ body {
 .timeline-dot.walk { background: #10b981; box-shadow: 0 0 0 2px #a7f3d0; }
 .timeline-dot.ferry { background: #0ea5e9; box-shadow: 0 0 0 2px #bae6fd; }
 .timeline-dot.night { background: #1e3a8a; box-shadow: 0 0 0 2px #93c5fd; }
+.timeline-dot.relax { background: #ec4899; box-shadow: 0 0 0 2px #fbcfe8; }
+.timeline-dot.book { background: #8b5cf6; box-shadow: 0 0 0 2px #ddd6fe; }
 
 /* Transport Tag Style */
 .transport-tag {
@@ -262,7 +264,9 @@ body {
                 p.isArch ? 'arch' : '', 
                 p.isWalk ? 'walk' : '',
                 p.isFerry ? 'ferry' : '',
-                p.isNight ? 'night' : ''
+                p.isNight ? 'night' : '',
+                p.isRelax ? 'relax' : '',
+                p.isBook ? 'book' : ''
               ]"></div>
               
               <div class="flex flex-col">
@@ -275,6 +279,8 @@ body {
                     <i v-if="p.isWalk" class="fa-solid fa-person-walking-luggage text-emerald-500 mr-1 text-xs"></i>
                     <i v-if="p.isFerry" class="fa-solid fa-ship text-sky-500 mr-1 text-xs"></i>
                     <i v-if="p.isNight" class="fa-solid fa-moon text-blue-800 mr-1 text-xs"></i>
+                    <i v-if="p.isRelax" class="fa-solid fa-spa text-pink-500 mr-1 text-xs"></i>
+                    <i v-if="p.isBook" class="fa-solid fa-book text-violet-500 mr-1 text-xs"></i>
                     {{ p.title }}
                     <span v-if="p.hasTicket" class="ticket-badge"><i class="fa-solid fa-check"></i> 已預約/購票</span>
                   </span>
@@ -287,7 +293,10 @@ body {
                   p.isArch ? 'bg-purple-50 border-purple-100 text-slate-700' : 
                   p.isWalk ? 'bg-emerald-50 border-emerald-100 text-slate-700' : 
                   p.isFerry ? 'bg-sky-50 border-sky-100 text-slate-700' : 
-                  p.isNight ? 'bg-blue-50 border-blue-100 text-slate-700' : 'bg-white/50 border-slate-100']">
+                  p.isNight ? 'bg-blue-50 border-blue-100 text-slate-700' : 
+                  p.isRelax ? 'bg-pink-50 border-pink-100 text-slate-700' :
+                  p.isBook ? 'bg-violet-50 border-violet-100 text-slate-700' :
+                  'bg-white/50 border-slate-100']">
                   {{ p.note }}
                 </span>
 
@@ -468,7 +477,7 @@ body {
             </div>
           </div>
 
-          <!-- 上海卡片 (更新) -->
+          <!-- 上海卡片 -->
           <div class="bg-white border border-slate-100 p-4 rounded-xl mb-4 shadow-sm relative overflow-hidden">
              <div class="absolute right-0 top-0 p-3 opacity-5 text-6xl pointer-events-none"><i class="fa-solid fa-city"></i></div>
              <div class="relative z-10">
@@ -515,10 +524,9 @@ body {
              </a>
           </div>
 
-          <!-- 住宿導航按鈕 (上海 - 更新) -->
+          <!-- 住宿導航按鈕 (上海) -->
           <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm mb-4">
              <div class="flex gap-3 mb-3">
-                <!-- 更新圖片連結 -->
                 <img src="https://raw.githubusercontent.com/kerryraquel/Travel-Image/575b9b19e4a629823b62bcadabd28733c9c83c40/Image_20251215_173212_035.png" class="w-16 h-16 object-cover rounded-lg shrink-0 bg-indigo-100" alt="上海外灘333酒店">
                 <div>
                   <h3 class="font-bold text-slate-800 text-base leading-tight">上海外灘333酒店</h3>
@@ -774,8 +782,8 @@ createApp({
      {day:'Day 3', weekDay:'SUN', display:'21',date:'12月21日',city:'蘇州',plans:[
        {time:'10:30',title:'西園寺 (數羅漢)',note:'必吃素麵，擼貓，並到羅漢堂「數羅漢」測運勢', isFood: true, transport:'從民宿: <i class="fa-solid fa-taxi"></i> 打車約 15分鐘'},
        {time:'13:00',title:'留園',note:'已購票。中國四大名園之一，精緻小巧', isArch: true, hasTicket: true, transport:'從西園寺: <i class="fa-solid fa-person-walking"></i> 步行約 800米 (10分鐘) 可達'},
-       {time:'15:00',title:'雙塔市集',note:'下午茶小吃：芋泥麻薯、蛋餅', isFood: true, transport:'從留園: <i class="fa-solid fa-taxi"></i> 打車約 20分鐘 至定慧寺巷'},
-       {time:'16:00',title:'前往金雞湖',note:'準備前往看日落 (日落時間約 16:58)', isWalk: true, transport:'從雙塔: <i class="fa-solid fa-train-subway"></i> 地鐵1號線(相門→東方之門) 或 <i class="fa-solid fa-taxi"></i> 打車'},
+       {time:'15:00',title:'蘇州誠品書店',note:'大陸首家誠品，環境舒適，大樓梯必打卡，適合帶媽咪悠閒逛逛', isBook: true, transport:'從留園: <i class="fa-solid fa-taxi"></i> 打車約 25分鐘 至金雞湖畔'},
+       {time:'16:00',title:'前往金雞湖',note:'準備前往看日落 (日落時間約 16:58)', isWalk: true, transport:'從誠品: <i class="fa-solid fa-person-walking"></i> 步行即可到達湖濱'},
        {time:'16:30',title:'金雞湖日落',note:'金水灣棧橋/東方之門，必看夕陽美景', isWalk: true, transport:'位置: 湖濱步道'},
        {time:'18:30',title:'桃花源記 (晚餐)',note:'營業至21:00。赤豆糊圓子、醬骨頭', isFood: true, transport:'<i class="fa-solid fa-taxi"></i> 打車前往平江路或觀前街分店'}
      ]},
@@ -791,8 +799,8 @@ createApp({
        {time:'10:00',title:'武康路 & 安福路 City Walk',note:'起點武康大樓，沿途打卡RAC Bar、Sunflour，逛話梅、BM等潮店', isWalk: true, transport:'<span class="text-slate-400">從酒店:</span> <i class="fa-solid fa-train-subway"></i> 地鐵10/11號線 交通大學站 7號口'},
        {time:'12:30',title:'番禺路/新華路',note:'午餐時間，感受法租界梧桐樹下的寧靜', isWalk: true, isFood: true, transport:'<span class="text-slate-400">從安福路:</span> <i class="fa-solid fa-taxi"></i> 打車約 10分鐘 至新華路 (上海第一花園馬路)'},
        {time:'14:30',title:'新天地 (石庫門)',note:'【建築重點】參觀「屋里廂」石庫門博物館，穿梭弄堂看青磚步行街', isArch: true, transport:'<span class="text-slate-400">從新華路:</span> <i class="fa-solid fa-taxi"></i> 打車約 15分鐘 至新天地'},
-       {time:'16:00',title:'恒基·旭輝天地',note:'Jean Nouvel 設計，標誌性的紅色內庭與綠植，就在新天地附近', isArch: true, transport:'<span class="text-slate-400">從新天地:</span> <i class="fa-solid fa-person-walking"></i> 步行約 600米 (馬當路)'},
-       {time:'17:30',title:'陝西南路 & iapm商圈',note:'連接淮海中路，iapm商場好逛，周邊進賢路/長樂路有很多Bistro和小店，晚餐首選！', isFood: true, transport:'<span class="text-slate-400">從旭輝:</span> <i class="fa-solid fa-train-subway"></i> 地鐵13號線 (馬當路→淮海中路) 或步行 1.5km'}
+       {time:'16:00',title:'思南公館 (Sinan Mansions)',note:'露天花園別墅群，平路好行，環境清幽，適合帶媽咪散步拍照，比商場更有上海味。若太累可去附近的 Green Massage 按腳。', isRelax: true, transport:'<span class="text-slate-400">從新天地:</span> <i class="fa-solid fa-taxi"></i> 打車起步價 (約5分鐘) 或步行 10分鐘'},
+       {time:'17:30',title:'陝西南路 & iapm商圈',note:'連接淮海中路，iapm商場好逛，周邊進賢路/長樂路有很多Bistro和小店，晚餐首選！', isFood: true, transport:'<span class="text-slate-400">從思南公館:</span> <i class="fa-solid fa-person-walking"></i> 步行約 10分鐘 或打車'}
      ]},
      {day:'Day 6', weekDay:'WED', display:'24',date:'12月24日',city:'上海 -> 澳門',plans:[
        {time:'12:15',title:'前往虹橋機場 T1',note:'由酒店出發，準備搭乘 16:05 航班', transport:'🚗 網約車/的士: 約 40-50 分鐘 (視路況)<br>🚇 地鐵: 步行至南京東路站，搭乘 10號線 直達 虹橋1號航站樓站 (約 45 分鐘)'},
